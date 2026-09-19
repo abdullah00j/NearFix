@@ -1,5 +1,4 @@
-import './App.css'
-import Loginpage from './pages/Login'
+import Loginpage from './pages/Auth/Login'
 
 function App() {
   

@@ -1,1 +1,50 @@
 @import "tailwindcss";
+
+@font-face {
+  font-family: "ES Klarheit";
+  src: url("./assets/es-klarheit-font-family/ESKlarheitGrotesk-Rg-TRIAL-BF6618a7002c70f.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ES Klarheit";
+  src: url("./assets/es-klarheit-font-family/ESKlarheitGrotesk-Md-TRIAL-BF6618a7001a5a8.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ES Klarheit";
+  src: url("./assets/es-klarheit-font-family/ESKlarheitGrotesk-Smbd-TRIAL-BF6618a70009538.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ES Klarheit";
+  src: url("./assets/es-klarheit-font-family/ESKlarheitGrotesk-Bd-TRIAL-BF6618a70049644.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-primary: #0F766E;
+  --color-primary-light: #14B8A6;
+  --color-primary-dark: #115E59;
+
+  --color-background: #F8FAFC;
+  --color-text: #0F172A;
+  --font-sans: "ES Klarheit", sans-serif;
+
+
+    --breakpoint-xsm: 320px;
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
