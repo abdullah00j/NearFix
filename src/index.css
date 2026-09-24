@@ -2,7 +2,8 @@
 
 @font-face {
   font-family: "ES Klarheit";
-  src: url("./assets/es-klarheit-font-family/ESKlarheitGrotesk-Rg-TRIAL-BF6618a7002c70f.otf") format("opentype");
+  src: url("./assets/es-klarheit-font-family/ESKlarheitGrotesk-Rg-TRIAL-BF6618a7002c70f.otf")
+    format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -10,7 +11,8 @@
 
 @font-face {
   font-family: "ES Klarheit";
-  src: url("./assets/es-klarheit-font-family/ESKlarheitGrotesk-Md-TRIAL-BF6618a7001a5a8.otf") format("opentype");
+  src: url("./assets/es-klarheit-font-family/ESKlarheitGrotesk-Md-TRIAL-BF6618a7001a5a8.otf")
+    format("opentype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -18,7 +20,8 @@
 
 @font-face {
   font-family: "ES Klarheit";
-  src: url("./assets/es-klarheit-font-family/ESKlarheitGrotesk-Smbd-TRIAL-BF6618a70009538.otf") format("opentype");
+  src: url("./assets/es-klarheit-font-family/ESKlarheitGrotesk-Smbd-TRIAL-BF6618a70009538.otf")
+    format("opentype");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -26,25 +29,37 @@
 
 @font-face {
   font-family: "ES Klarheit";
-  src: url("./assets/es-klarheit-font-family/ESKlarheitGrotesk-Bd-TRIAL-BF6618a70049644.otf") format("opentype");
+  src: url("./assets/es-klarheit-font-family/ESKlarheitGrotesk-Bd-TRIAL-BF6618a70049644.otf")
+    format("opentype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @theme {
-  --color-primary: #0F766E;
-  --color-primary-light: #14B8A6;
-  --color-primary-dark: #115E59;
+  --color-primary: #0f766e;
+  --color-primary-light: #14b8a6;
+  --color-primary-dark: #115e59;
+  --color-panel-soft: #f7fafb;
+  --color-line: #e5edf0;
+  --color-background: #f8fafc;
+  --color-text: #0f172a;
 
-  --color-background: #F8FAFC;
-  --color-text: #0F172A;
   --font-sans: "ES Klarheit", sans-serif;
 
-
-    --breakpoint-xsm: 320px;
+  --breakpoint-xsm: 320px;
   --breakpoint-sm: 480px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
+}
+
+:root {
+  background-color: #eceff1;
+  --bg: #f3f6f7;
+  --panel: #ffffff;
+  --line: #e5edf0;
+  --text: #0f172a;
+  --muted: #64748b;
+  --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
 }
