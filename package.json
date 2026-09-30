@@ -8,9 +8,12 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "sandbox": "npx ampx sandbox",
+    "generate:graphql": "npx ampx generate graphql-client-code"
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.1140.0",
     "@tailwindcss/vite": "^4.3.3",
     "aws-amplify": "^6.22.0",
     "lucide-react": "^1.47.0",

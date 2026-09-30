@@ -1,18 +1,28 @@
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import Button from "../common/Button";
+import { signInWithRedirect } from "aws-amplify/auth";
 
 type AuthSectionProps = {
   setShowPhonePopup: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AuthSection = ({ setShowPhonePopup }: AuthSectionProps) => {
- 
-    return (
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithRedirect({
+        provider: "Google",
+      });
+    } catch (error) {
+      console.error("Google login failed:", error);
+    }
+  };
+
+  return (
     <>
       <section className="relative flex min-h-screen flex-col bg-background">
         {/* Mobile brand */}
         <div className="absolute left-6 top-6 flex items-center gap-1 md:hidden">
-         <div className="grid h-9 w-9 place-items-center ">
+          <div className="grid h-9 w-9 place-items-center ">
             <img src="/logo.png" alt="" />
           </div>
           <span className="text-[17px] font-bold tracking-[-0.02em] text-black">
@@ -35,7 +45,7 @@ const AuthSection = ({ setShowPhonePopup }: AuthSectionProps) => {
           {/* Auth methods */}
           <div className="mt-9">
             {/* Google */}
-            <Button className="cursor-pointer">
+            <Button className="cursor-pointer" onClick={handleGoogleLogin}>
               <img src="/google.svg.webp" alt="" className="size-7" />
               <span>Continue with Google</span>
             </Button>
