@@ -57,7 +57,7 @@ const router = createBrowserRouter([
 
   // ======USER
   {
-    element: <ProtectedRoute allowedRoles={["USER"]} />,
+    element: <ProtectedRoute allowedRoles={["CUSTOMER"]} />,
     children: [
       {
         path: "/",
@@ -164,7 +164,7 @@ const router = createBrowserRouter([
   },
 
   {
-    element: <ProtectedRoute allowedRoles={["USER", "PROVIDER"]} />,
+    element: <ProtectedRoute allowedRoles={["CUSTOMER", "PROVIDER"]} />,
     children: [
       {
         path: "/",
