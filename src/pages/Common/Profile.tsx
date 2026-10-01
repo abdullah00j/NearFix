@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Camera, ChevronDown, ImagePlus, Info, Trash2 } from "lucide-react";
-import { fetchUserAttributes } from "aws-amplify/auth";
+import { fetchUserAttributes, getCurrentUser } from "aws-amplify/auth";
 import Skeleton from "../../component/common/Skelton";
 
 type Theme = "Light" | "Dark" | "System";
@@ -20,13 +20,19 @@ const Profile = () => {
     email: "",
   });
 
+  const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(true);
+  const [profileError, setProfileError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = await fetchUserAttributes();
-        console.log(userData);
+        const [userData, currentUser] = await Promise.all([
+          fetchUserAttributes(),
+          getCurrentUser(),
+        ]);
+        setUsername(currentUser.username);
         setUserProfile({
           name: userData.name ?? "",
           profileImage: userData.picture ?? "",
@@ -34,13 +40,14 @@ const Profile = () => {
         });
       } catch (error) {
         console.error(error);
+        setProfileError(true);
       } finally {
         setLoading(false);
       }
     };
 
     fetchUser();
-  }, []);
+  }, [loadAttempt]);
 
   const [language, setLanguage] = useState("English");
 
@@ -143,6 +150,28 @@ const Profile = () => {
         <section>
           <h1 className={`text-xl font-medium ${textPrimary}`}>Profile</h1>
 
+          {profileError && (
+            <div
+              role="alert"
+              className={`mt-5 rounded-lg border p-4 ${borderColor}`}
+            >
+              <p className={`text-sm ${textPrimary}`}>
+                Unable to load your profile. Please try again.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setLoading(true);
+                  setProfileError(false);
+                  setLoadAttempt((previous) => previous + 1);
+                }}
+                className="mt-3 rounded-lg bg-[#0f766e] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#14b8a6]"
+              >
+                Retry
+              </button>
+            </div>
+          )}
+
           <div className="mt-8">
             <p className={`mb-3 text-sm font-medium ${textLabel}`}>Avatar</p>
 
@@ -222,7 +251,7 @@ const Profile = () => {
               <input
                 id="username"
                 type="text"
-                value={userProfile.name}
+                value={username}
                 readOnly
                 className={`h-10 w-full rounded-lg border px-3 text-sm outline-none transition ${inputBackground} ${inputBorder} ${inputText} focus:ring-2 ${
                   isDark
