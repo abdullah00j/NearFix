@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Camera, ChevronDown, ImagePlus, Info, Trash2 } from "lucide-react";
+import { fetchUserAttributes } from "aws-amplify/auth";
 
 // =====================================================
 // TYPES
@@ -24,9 +25,25 @@ const Profile = () => {
   // PROFILE
   // =====================================================
 
-  const [name, setName] = useState("Abdullah rana");
+  const [userProfile, setUserProfile] = useState({
+    name: "",
+    profileImage: "",
+    email: "",
+  });
 
-  const [username, setUsername] = useState("abdullahrana2616");
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userData = await fetchUserAttributes();
+      console.log(userData);
+      setUserProfile((prev) => ({
+        ...prev,
+        name: userData.name ?? prev.name,
+        profileImage: userData.picture ?? prev.profileImage,
+        email: userData.email ?? prev.email,
+      }));
+    };
+    fetchUser();
+  }, []);
 
   // =====================================================
   // SYSTEM PREFERENCES
@@ -156,10 +173,6 @@ const Profile = () => {
 
     console.log("Delete account clicked");
   };
-
-  // =====================================================
-  // COLORS
-  // =====================================================
 
   const pageBackground = isDark ? "bg-[#111111]" : "bg-white";
 
@@ -326,8 +339,8 @@ const Profile = () => {
             <input
               id="name"
               type="text"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
+              value={userProfile.name}
+              // onChange={(event) => setName(event.target.value)}
               className={`
                 h-10
                 w-full
@@ -369,8 +382,8 @@ const Profile = () => {
             <input
               id="username"
               type="text"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
+              value={userProfile.name}
+              // onChange={(event) => setUsername(event.target.value)}
               className={`
                 h-10
                 w-full
@@ -407,9 +420,7 @@ const Profile = () => {
               Email
             </p>
 
-            <p className={`text-sm ${textSecondary}`}>
-              abdullahrana2616@gmail.com
-            </p>
+            <p className={`text-sm ${textSecondary}`}>{userProfile.email}</p>
           </div>
         </section>
 

@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "prepare": "husky",
-    "sandbox": "npx ampx sandbox",
+    "sandbox": "npx ampx sandbox --identifier nearfixnew",
     "generate:graphql": "npx ampx generate graphql-client-code"
   },
   "dependencies": {

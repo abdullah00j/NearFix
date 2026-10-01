@@ -11,6 +11,8 @@ export const auth = defineAuth({
         scopes: ["email", "profile"],
         attributeMapping: {
           email: "email",
+          fullname: "name",
+          profilePicture: "picture",
         },
       },
       callbackUrls: [
