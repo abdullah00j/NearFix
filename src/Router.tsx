@@ -24,6 +24,7 @@ import ReviewsPage from "./pages/Provider/ReviewsPage";
 import RegistrationPage from "./pages/Provider/RegistrationPage";
 import BookingHistoryPage from "./pages/Common/BookingHistoryPage";
 import FavouritePage from "./pages/Common/FavouritePage";
+import NotFound from "./pages/Common/NotFound";
 
 //eslint-disable-next-line
 const AppLayout = () => {
@@ -193,7 +194,11 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <div>404 Not Found</div>,
+    element: (
+      <div>
+        <NotFound />
+      </div>
+    ),
   },
 ]);
 
