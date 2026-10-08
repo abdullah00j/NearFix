@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { Camera, ChevronDown, ImagePlus, Info, Trash2 } from "lucide-react";
-import { fetchUserAttributes } from "aws-amplify/auth";
-
-// =====================================================
-// TYPES
-// =====================================================
+import { useGetUser } from "../../hooks/usegetUser";
+import ProfileSkeleton from "../../skeletons/ProfileSkeleton";
 
 type Theme = "Light" | "Dark" | "System";
 
@@ -16,38 +13,13 @@ type Device = {
   current: boolean;
 };
 
-// =====================================================
-// COMPONENT
-// =====================================================
-
 const Profile = () => {
-  // =====================================================
-  // PROFILE
-  // =====================================================
-
-  const [userProfile, setUserProfile] = useState({
-    name: "",
-    profileImage: "",
-    email: "",
-  });
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const userData = await fetchUserAttributes();
-      console.log(userData);
-      setUserProfile((prev) => ({
-        ...prev,
-        name: userData.name ?? prev.name,
-        profileImage: userData.picture ?? prev.profileImage,
-        email: userData.email ?? prev.email,
-      }));
-    };
-    fetchUser();
-  }, []);
-
-  // =====================================================
-  // SYSTEM PREFERENCES
-  // =====================================================
+  const { user, loading, error } = useGetUser();
+  const userProfile = {
+    name: user?.name ?? "",
+    profileImage: user?.profileImage ?? "",
+    email: user?.email ?? "",
+  };
 
   const [language, setLanguage] = useState("English");
 
@@ -65,15 +37,7 @@ const Profile = () => {
     return "Light";
   });
 
-  // =====================================================
-  // NOTIFICATIONS
-  // =====================================================
-
   const [newsletterEnabled, setNewsletterEnabled] = useState(true);
-
-  // =====================================================
-  // DEVICES
-  // =====================================================
 
   const [devices, setDevices] = useState<Device[]>([
     {
@@ -85,60 +49,10 @@ const Profile = () => {
     },
   ]);
 
-  // =====================================================
-  // DARK MODE / LIGHT MODE
-  // =====================================================
-
-  const [isDark, setIsDark] = useState(false);
-
-  // =====================================================
-  // HANDLE THEME
-  // =====================================================
-
-  useEffect(() => {
-    const applyTheme = () => {
-      let darkMode = false;
-
-      if (theme === "Dark") {
-        darkMode = true;
-      }
-
-      if (theme === "System") {
-        darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      }
-
-      setIsDark(darkMode);
-    };
-
-    applyTheme();
-
-    // Listen for system theme changes
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const handleSystemThemeChange = () => {
-      if (theme === "System") {
-        applyTheme();
-      }
-    };
-
-    mediaQuery.addEventListener("change", handleSystemThemeChange);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleSystemThemeChange);
-    };
-  }, [theme]);
-
-  // =====================================================
-  // SAVE THEME
-  // =====================================================
-
   useEffect(() => {
     localStorage.setItem("theme", theme);
+    window.dispatchEvent(new Event("nearfix:themechange"));
   }, [theme]);
-
-  // =====================================================
-  // CHANGE PHOTO
-  // =====================================================
 
   const handleChangePhoto = () => {
     console.log("Change profile photo clicked");
@@ -152,71 +66,34 @@ const Profile = () => {
     setDevices((previousDevices) =>
       previousDevices.filter((device) => device.id !== deviceId),
     );
-
-    /*
-      Future backend:
-
-      DELETE /api/auth/sessions/:sessionId
-    */
   };
 
-  // =====================================================
-  // DELETE ACCOUNT
-  // =====================================================
+  if (loading) {
+    return <ProfileSkeleton />;
+  }
 
-  const handleDeleteAccount = () => {
-    /*
-      Future backend:
-
-      DELETE /api/users/account
-    */
-
-    console.log("Delete account clicked");
-  };
-
-  const pageBackground = isDark ? "bg-[#111111]" : "bg-white";
-
-  const textPrimary = isDark ? "text-white" : "text-slate-900";
-
-  const textSecondary = isDark ? "text-slate-400" : "text-slate-500";
-
-  const textLabel = isDark ? "text-slate-200" : "text-slate-800";
-
-  const borderColor = isDark ? "border-[#303030]" : "border-slate-200";
-
-  const inputBackground = isDark ? "bg-[#1b1b1b]" : "bg-white";
-
-  const inputBorder = isDark ? "border-[#3a3a3a]" : "border-slate-300";
-
-  const inputText = isDark ? "text-white" : "text-slate-900";
-
-  // =====================================================
-  // JSX
-  // =====================================================
+  if (error) {
+    return <div>{error.message}</div>;
+  }
 
   return (
     <main
       className={`
-        min-h-screen
+       
         px-6
         py-8
-        transition-colors
+        
         duration-300
-        ${pageBackground}
-        ${textPrimary}
+        text-slate-900 dark:text-slate-100
       `}
     >
-      <div className="mx-auto max-w-[1280px]">
-        {/* =================================================
-            PROFILE
-        ================================================= */}
-
+      <div className="mx-auto max-w-[1280px] ">
         <section>
           <h1
             className={`
               text-xl
               font-medium
-              ${textPrimary}
+              text-slate-900 dark:text-slate-100
             `}
           >
             Profile
@@ -230,7 +107,7 @@ const Profile = () => {
                 mb-3
                 text-sm
                 font-medium
-                ${textLabel}
+                text-slate-800 dark:text-slate-200
               `}
             >
               Avatar
@@ -249,7 +126,7 @@ const Profile = () => {
                   rounded-full
                   outline-none
                   ring-offset-2
-                  transition
+                  
                   focus-visible:ring-2
                   focus-visible:ring-slate-500
                 "
@@ -269,7 +146,7 @@ const Profile = () => {
                     text-white
                   "
                 >
-                  A
+                  <img src={userProfile.profileImage} alt="Profile" />
                 </div>
 
                 {/* Hover Overlay */}
@@ -309,10 +186,10 @@ const Profile = () => {
                 py-2
                 text-sm
                 font-medium
-                transition
-                ${inputBorder}
-                ${textLabel}
-                ${isDark ? "hover:bg-[#222222]" : "hover:bg-slate-50"}
+                
+                border-slate-300 dark:border-[#3a3a3a]
+                text-slate-800 dark:text-slate-200
+                hover:bg-slate-50 dark:hover:bg-[#222222]
               `}
             >
               <ImagePlus size={16} />
@@ -330,7 +207,7 @@ const Profile = () => {
                 block
                 text-sm
                 font-medium
-                ${textLabel}
+                text-slate-800 dark:text-slate-200
               `}
             >
               Name
@@ -349,59 +226,12 @@ const Profile = () => {
                 px-3
                 text-sm
                 outline-none
-                transition
-                ${inputBackground}
-                ${inputBorder}
-                ${inputText}
-                ${
-                  isDark
-                    ? "focus:border-slate-500 focus:ring-[#14b8a6]"
-                    : "focus:border-slate-500 focus:ring-[#115e59]"
-                }
+                
+                bg-white dark:bg-[#1b1b1b]
+                border-slate-300 dark:border-[#3a3a3a]
+                text-slate-900 dark:text-white
+                focus:border-slate-500 focus:ring-[#115e59] dark:focus:ring-[#14b8a6]
                 focus:ring-2
-              `}
-            />
-          </div>
-
-          {/* ================= USERNAME ================= */}
-
-          <div className="mt-5 w-full max-w-[320px]">
-            <label
-              htmlFor="username"
-              className={`
-                mb-2
-                block
-                text-sm
-                font-medium
-                ${textLabel}
-              `}
-            >
-              Username
-            </label>
-
-            <input
-              id="username"
-              type="text"
-              value={userProfile.name}
-              // onChange={(event) => setUsername(event.target.value)}
-              className={`
-                h-10
-                w-full
-                rounded-lg
-                border
-                px-3
-                text-sm
-                outline-none
-                transition
-                ${inputBackground}
-                ${inputBorder}
-                ${inputText}
-                focus:ring-2
-                ${
-                  isDark
-                    ? "focus:border-slate-500 focus:ring-[#14b8a6]"
-                    : "focus:border-slate-500 focus:ring-[#115e59]"
-                }
               `}
             />
           </div>
@@ -414,13 +244,15 @@ const Profile = () => {
                 mb-2
                 text-sm
                 font-medium
-                ${textLabel}
+                text-slate-800 dark:text-slate-200
               `}
             >
               Email
             </p>
 
-            <p className={`text-sm ${textSecondary}`}>{userProfile.email}</p>
+            <p className={`text-sm text-slate-500 dark:text-slate-400`}>
+              {userProfile.email}
+            </p>
           </div>
         </section>
 
@@ -433,14 +265,14 @@ const Profile = () => {
             mt-10
             border-t
             pt-10
-            ${borderColor}
+            border-slate-200 dark:border-[#303030]
           `}
         >
           <h2
             className={`
               text-lg
               font-medium
-              ${textPrimary}
+              text-slate-900 dark:text-slate-100
             `}
           >
             System preferences
@@ -465,7 +297,7 @@ const Profile = () => {
                   block
                   text-sm
                   font-medium
-                  ${textLabel}
+                  text-slate-800 dark:text-slate-200
                 `}
               >
                 Language
@@ -486,16 +318,12 @@ const Profile = () => {
                     pr-10
                     text-sm
                     outline-none
-                    transition
-                    ${inputBackground}
-                    ${inputBorder}
-                    ${inputText}
+                    
+                    bg-white dark:bg-[#1b1b1b]
+                    border-slate-300 dark:border-[#3a3a3a]
+                    text-slate-900 dark:text-white
                     focus:ring-2
-                    ${
-                      isDark
-                        ? "focus:border-slate-500 focus:ring-[#14b8a6]"
-                        : "focus:border-slate-500 focus:ring-[#115e59]"
-                    }
+                    focus:border-slate-500 focus:ring-[#115e59] dark:focus:ring-[#14b8a6]
                   `}
                 >
                   <option value="English">English</option>
@@ -511,7 +339,7 @@ const Profile = () => {
                     right-3
                     top-1/2
                     -translate-y-1/2
-                    ${textLabel}
+                    text-slate-800 dark:text-slate-200
                   `}
                 />
               </div>
@@ -527,7 +355,7 @@ const Profile = () => {
                   block
                   text-sm
                   font-medium
-                  ${textLabel}
+                  text-slate-800 dark:text-slate-200
                 `}
               >
                 Theme
@@ -548,16 +376,12 @@ const Profile = () => {
                     pr-10
                     text-sm
                     outline-none
-                    transition
-                    ${inputBackground}
-                    ${inputBorder}
-                    ${inputText}
+                    
+                    bg-white dark:bg-[#1b1b1b]
+                    border-slate-300 dark:border-[#3a3a3a]
+                    text-slate-900 dark:text-white
                     focus:ring-2
-                    ${
-                      isDark
-                        ? "focus:border-slate-500 focus:ring-[#14b8a6]"
-                        : "focus:border-slate-500 focus:ring-[#115e59]"
-                    }
+                    focus:border-slate-500 focus:ring-[#115e59] dark:focus:ring-[#14b8a6]
                   `}
                 >
                   <option value="Light">Light</option>
@@ -575,7 +399,7 @@ const Profile = () => {
                     right-3
                     top-1/2
                     -translate-y-1/2
-                    ${textLabel}
+                    text-slate-800 dark:text-slate-200
                   `}
                 />
               </div>
@@ -592,14 +416,14 @@ const Profile = () => {
             mt-10
             border-t
             pt-10
-            ${borderColor}
+            border-slate-200 dark:border-[#303030]
           `}
         >
           <h2
             className={`
               text-lg
               font-medium
-              ${textPrimary}
+              text-slate-900 dark:text-slate-100
             `}
           >
             Notifications
@@ -619,7 +443,7 @@ const Profile = () => {
                   className={`
                     text-sm
                     font-medium
-                    ${textPrimary}
+                    text-slate-900 dark:text-slate-100
                   `}
                 >
                   Newsletter
@@ -629,7 +453,7 @@ const Profile = () => {
                   className={`
                     mt-1
                     text-sm
-                    ${textSecondary}
+                    text-slate-500 dark:text-slate-400
                   `}
                 >
                   Receive newsletters, promotions and news from Magnific
@@ -649,7 +473,7 @@ const Profile = () => {
                   w-10
                   shrink-0
                   rounded-full
-                  transition-colors
+                  
                   duration-200
                   ${newsletterEnabled ? "bg-[#14b8a6]" : "bg-[#676868]"}
                 `}
@@ -663,8 +487,7 @@ const Profile = () => {
                     rounded-full
                     bg-white
                     shadow-sm
-                    transition-all
-                    duration-200
+                    
                     ${newsletterEnabled ? "left-[22px]" : "left-0.5"}
                   `}
                 />
@@ -677,7 +500,7 @@ const Profile = () => {
                 max-w-[1100px]
                 text-xs
                 leading-5
-                ${textSecondary}
+                text-slate-500 dark:text-slate-400
               `}
             >
               Magnific will process your data to send you information about our
@@ -716,7 +539,7 @@ const Profile = () => {
             mt-10
             border-t
             pt-10
-            ${borderColor}
+            border-slate-200 dark:border-[#303030]
           `}
         >
           {/* Heading */}
@@ -726,7 +549,7 @@ const Profile = () => {
               className={`
                 text-lg
                 font-medium
-                ${textPrimary}
+                text-slate-900 dark:text-slate-100
               `}
             >
               Sessions & devices
@@ -739,11 +562,7 @@ const Profile = () => {
                 py-1
                 text-xs
                 font-medium
-                ${
-                  isDark
-                    ? "bg-[#252525] text-slate-300"
-                    : "bg-slate-100 text-slate-700"
-                }
+                bg-slate-100 text-slate-700 dark:bg-[#252525] dark:text-slate-300
               `}
             >
               {devices.length}/3 devices
@@ -754,7 +573,7 @@ const Profile = () => {
             className={`
               mt-5
               text-sm
-              ${textSecondary}
+              text-slate-500 dark:text-slate-400
             `}
           >
             For security reasons, each account is limited to three connected
@@ -769,7 +588,7 @@ const Profile = () => {
                 <tr
                   className={`
                     border-b
-                    ${borderColor}
+                    border-slate-200 dark:border-[#303030]
                   `}
                 >
                   <th
@@ -778,7 +597,7 @@ const Profile = () => {
                       py-3
                       text-xs
                       font-medium
-                      ${textLabel}
+                      text-slate-800 dark:text-slate-200
                     `}
                   >
                     OS
@@ -790,7 +609,7 @@ const Profile = () => {
                       py-3
                       text-xs
                       font-medium
-                      ${textLabel}
+                      text-slate-800 dark:text-slate-200
                     `}
                   >
                     Browser
@@ -802,7 +621,7 @@ const Profile = () => {
                       py-3
                       text-xs
                       font-medium
-                      ${textLabel}
+                      text-slate-800 dark:text-slate-200
                     `}
                   >
                     Location
@@ -814,7 +633,7 @@ const Profile = () => {
                       py-3
                       text-xs
                       font-medium
-                      ${textLabel}
+                      text-slate-800 dark:text-slate-200
                     `}
                   >
                     Last session
@@ -830,7 +649,7 @@ const Profile = () => {
                     key={device.id}
                     className={`
                       border-b
-                      ${borderColor}
+                      border-slate-200 dark:border-[#303030]
                     `}
                   >
                     {/* OS */}
@@ -840,7 +659,7 @@ const Profile = () => {
                         px-4
                         py-5
                         text-sm
-                        ${textPrimary}
+                        text-slate-900 dark:text-slate-100
                       `}
                     >
                       {device.os}
@@ -853,7 +672,7 @@ const Profile = () => {
                         px-4
                         py-5
                         text-sm
-                        ${textSecondary}
+                        text-slate-500 dark:text-slate-400
                       `}
                     >
                       {device.browser}
@@ -866,7 +685,7 @@ const Profile = () => {
                         px-4
                         py-5
                         text-sm
-                        ${textSecondary}
+                        text-slate-500 dark:text-slate-400
                       `}
                     >
                       {device.location}
@@ -881,7 +700,7 @@ const Profile = () => {
                           items-center
                           gap-2
                           text-sm
-                          ${textSecondary}
+                          text-slate-500 dark:text-slate-400
                         `}
                       >
                         <span
@@ -909,7 +728,7 @@ const Profile = () => {
                           aria-label="Remove device"
                           className="
                             text-slate-400
-                            transition
+                            
                             hover:text-red-500
                           "
                         >
@@ -934,12 +753,12 @@ const Profile = () => {
             border-t
             pt-10
             pb-12
-            ${borderColor}
+            border-slate-200 dark:border-[#303030]
           `}
         >
           <button
             type="button"
-            onClick={handleDeleteAccount}
+            // onClick={}
             className="
               rounded-lg
               bg-[#0f766e]
@@ -948,7 +767,7 @@ const Profile = () => {
               text-sm
               font-medium
               text-white
-              transition
+              
               hover:bg-[#14b8a6]
             "
           >

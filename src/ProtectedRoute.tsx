@@ -1,9 +1,10 @@
 import { fetchAuthSession } from "aws-amplify/auth";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Loader from "./component/common/Loader";
+import { useCurrentUser } from "./context/UserContext";
 
 type Role = "CUSTOMER" | "PROVIDER" | "ADMIN";
-type groupRole = Role[];
 
 interface ProtectedRouteProps {
   allowedRoles: Role[];
@@ -11,21 +12,29 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [group, setGroup] = useState<groupRole>([]);
+
+  const { role, setRole } = useCurrentUser();
   const location = useLocation();
 
   useEffect(() => {
     const checkSession = async () => {
       try {
         const { tokens } = await fetchAuthSession();
+        if (!tokens) {
+          setIsAuthenticated(false);
+          return;
+        }
+
         const groups = tokens?.idToken?.payload["cognito:groups"];
         const validGroups: Role[] = Array.isArray(groups)
           ? groups.filter(
-              (role): role is Role =>
-                role === "CUSTOMER" || role === "PROVIDER" || role === "ADMIN",
+              (group): group is Role =>
+                group === "CUSTOMER" ||
+                group === "PROVIDER" ||
+                group === "ADMIN",
             )
           : [];
-        setGroup(validGroups);
+        setRole(validGroups);
         console.log(validGroups);
 
         setIsAuthenticated(!!tokens);
@@ -36,10 +45,14 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
     };
 
     checkSession();
-  }, []);
+  }, [setRole]);
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>;
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader label="Checking your session..." />
+      </div>
+    );
   }
 
   if (location.pathname === "/login" && isAuthenticated) {
@@ -50,7 +63,7 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (!group.some((role) => allowedRoles.includes(role))) {
+  if (!role?.some((roles) => allowedRoles.includes(roles))) {
     return <Navigate to="/" replace />;
   }
 

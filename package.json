@@ -10,10 +10,13 @@
     "preview": "vite preview",
     "prepare": "husky",
     "sandbox": "npx ampx sandbox --identifier nearfixnew",
-    "generate:graphql": "npx ampx generate graphql-client-code"
+    "generate:graphql": "npx ampx generate graphql-client-code --stack amplify-nearfix-nearfixnew-sandbox-fd1429edea  --format graphql-codegen  --statement-target typescript  --out ./src/graphql"
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.1140.0",
+    "@aws-sdk/client-dynamodb": "^3.1146.0",
+    "@aws-sdk/client-sqs": "^3.1146.0",
+    "@aws-sdk/lib-dynamodb": "^3.1146.0",
     "@tailwindcss/vite": "^4.3.3",
     "aws-amplify": "^6.22.0",
     "lucide-react": "^1.47.0",
@@ -27,6 +30,7 @@
     "@aws-amplify/backend": "^1.25.1",
     "@aws-amplify/backend-cli": "^1.10.0",
     "@eslint/js": "^10.0.1",
+    "@types/aws-lambda": "^8.10.164",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",

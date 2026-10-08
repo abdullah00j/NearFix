@@ -17,13 +17,17 @@ import CategoryManagement from "./pages/Admin/CategoryManagement";
 import ProviderVerification from "./pages/Admin/ProviderVerification";
 import Reports from "./pages/Admin/Reports";
 import CustomerManagement from "./pages/Admin/CustomerManagement";
-import BookingRequest from "./pages/Provider/BookingRequest";
+import Booking from "./pages/Common/Booking";
 import ProviderDashboard from "./pages/Provider/ProviderDashboard";
 import EarningsPage from "./pages/Provider/EarningsPage";
 import ReviewsPage from "./pages/Provider/ReviewsPage";
 import RegistrationPage from "./pages/Provider/RegistrationPage";
 import BookingHistoryPage from "./pages/Common/BookingHistoryPage";
 import FavouritePage from "./pages/Common/FavouritePage";
+import AIAssistantPage from "./pages/Common/AIAssistantPage";
+import ServiceProvidersPage from "./pages/Common/ServiceProvidersPage";
+import SettingsPage from "./pages/Common/SettingsPage";
+import BecomeProviderPage from "./pages/Common/BecomeProviderPage";
 
 //eslint-disable-next-line
 const AppLayout = () => {
@@ -66,6 +70,14 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <UserLiveFeed />,
+          },
+          {
+            path: "service-providers",
+            element: <ServiceProvidersPage />,
+          },
+          {
+            path: "become-provider",
+            element: <BecomeProviderPage />,
           },
           {
             path: "favourite-page",
@@ -111,14 +123,6 @@ const router = createBrowserRouter([
           {
             path: "service-management",
             element: <ServiceManagement />,
-          },
-          {
-            path: "booking-history",
-            element: <BookingHistoryPage />,
-          },
-          {
-            path: "bookings",
-            element: <BookingRequest />,
           },
         ],
       },
@@ -183,10 +187,23 @@ const router = createBrowserRouter([
             element: <SupportPage />,
           },
           {
+            path: "bookings",
+            element: <Booking />,
+          },
+          {
+            path: "ai-assistant",
+            element: <AIAssistantPage />,
+          },
+          {
+            path: "favourite",
+            element: <FavouritePage />,
+          },
+          {
             path: "notifications",
             element: <NotificationsPage />,
           },
-          { path: "settings", element: <div>Settings</div> },
+          { path: "booking-history", element: <BookingHistoryPage /> },
+          { path: "settings", element: <SettingsPage /> },
         ],
       },
     ],

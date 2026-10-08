@@ -1,6 +1,5 @@
 import { defineAuth, secret } from "@aws-amplify/backend";
 import { preTokenGeneration } from "../functions/preTokenGeneration/resources";
-
 export const auth = defineAuth({
   loginWith: {
     email: true,

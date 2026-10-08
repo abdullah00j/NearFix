@@ -22,7 +22,7 @@ function TopBar() {
   ];
 
   return (
-    <div className="flex bg-white items-center justify-between rounded-[20px] border border-[var(--line)] bg-[var(--panel)] px-3 py-2.5 shadow-[0_8px_22px_rgba(15,23,42,0.03)]">
+    <div className="flex items-center justify-between rounded-[20px] border border-[var(--line)] bg-[var(--panel)] px-3 py-2.5 shadow-[0_8px_22px_rgba(15,23,42,0.03)]">
       <div className="flex items-center gap-3">
         <button
           type="button"

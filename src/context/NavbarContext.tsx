@@ -8,7 +8,7 @@ interface NavbarContextType {
 export const NavbarContext = createContext<NavbarContextType | null>(null);
 
 export const NavbarProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
     <NavbarContext.Provider value={{ isSidebarOpen, setIsSidebarOpen }}>

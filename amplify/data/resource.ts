@@ -1,4 +1,5 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { ensureUser } from "../functions/ensureUser/resources";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -246,10 +247,18 @@ const schema = a.schema({
       //RELATIONSHIP
       userWarnngs: a.belongsTo("NearFixUser", "issuedTo"),
     })
+
     .authorization((allow) => [
       allow.group("ADMIN"),
       allow.authenticated().to(["read"]),
     ]),
+
+  ensureUser: a
+    .mutation()
+    .arguments({})
+    .returns(a.boolean())
+    .authorization((allow) => [allow.authenticated()])
+    .handler(a.handler.function(ensureUser)),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -257,7 +266,7 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: "identityPool",
+    defaultAuthorizationMode: "userPool",
   },
 });
 

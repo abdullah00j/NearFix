@@ -79,7 +79,7 @@ function Navbar() {
   };
 
   return (
-    <div className="flex bg-white w-full items-center justify-between gap-3 rounded-[22px] border border-[var(--line)] bg-[var(--panel)] px-3 py-2.5 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
+    <div className="flex w-full items-center justify-between gap-3 rounded-[20px] border border-[var(--line)] bg-[var(--panel)] px-3 py-2.5 shadow-[0_10px_24px_rgba(15,23,42,0.04)]">
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <div className="flex items-center gap-2 rounded-xl border border-line bg-panel-soft shadow-md px-2 py-1.5">
           <img
@@ -98,7 +98,6 @@ function Navbar() {
             <SearchBar
               placeholder="Search for projects, tasks, and more"
               shortcutEnable={true}
-              bgColor="gray-100"
             />
           </div>
           <div className="flex sm:hidden">
