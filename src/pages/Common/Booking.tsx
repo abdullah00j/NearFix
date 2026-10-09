@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 
 import { useCurrentUser } from "../../context/UserContext";
-import BookingHeader from "../../component/Pages/Booking.tsx/BookingHeader";
-import BookingCards from "../../component/Pages/Booking.tsx/BookingCards";
-import BookingListing from "../../component/Pages/Booking.tsx/BookingListing";
+import BookingHeader from "../../components/Pages/CUSTOMER/Booking.tsx/BookingHeader";
+import BookingCards from "../../components/Pages/CUSTOMER/Booking.tsx/BookingCards";
+import BookingListing from "../../components/Pages/CUSTOMER/Booking.tsx/BookingListing";
 
 type BookingStatus = "PENDING" | "CONFIRMED" | "IN_PROGRESS" | "CANCELED";
 type BookingFilter = "ALL" | "PENDING" | "CONFIRMED" | "IN_PROGRESS";

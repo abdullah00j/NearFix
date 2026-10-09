@@ -1,11 +1,11 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { Check } from "lucide-react";
-import BecomeProviderHeader from "../../component/Pages/BecomeProvider/BecomeProviderHeader";
-import BecomeProviderFooter from "../../component/Pages/BecomeProvider/BecomeProviderFooter";
-import BasicDetail from "../../component/Pages/BecomeProvider/BasicDetail";
-import CnicVerfication from "../../component/Pages/BecomeProvider/CnicVerfication";
-import BecomeProviderReview from "../../component/Pages/BecomeProvider/BecomeProviderReview";
-import BecomeProviderProgressBar from "../../component/Pages/BecomeProvider/BecomeProviderProgressBar";
+import BecomeProviderHeader from "../../components/Pages/CUSTOMER/BecomeProvider/BecomeProviderHeader";
+import BecomeProviderFooter from "../../components/Pages/CUSTOMER/BecomeProvider/BecomeProviderFooter";
+import BasicDetail from "../../components/Pages/CUSTOMER/BecomeProvider/BasicDetail";
+import CnicVerfication from "../../components/Pages/CUSTOMER/BecomeProvider/CnicVerfication";
+import BecomeProviderReview from "../../components/Pages/CUSTOMER/BecomeProvider/BecomeProviderReview";
+import BecomeProviderProgressBar from "../../components/Pages/CUSTOMER/BecomeProvider/BecomeProviderProgressBar";
 
 type ServiceOffering = {
   id: string;

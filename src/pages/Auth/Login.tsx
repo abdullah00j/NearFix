@@ -1,7 +1,7 @@
 import { useState } from "react";
-import ImageSection from "../../component/Auth/ImageSection";
-import AuthSection from "../../component/Auth/AuthSection";
-import PhoneOtpModal from "../../component/Auth/PhoneOtpModal";
+import ImageSection from "../../components/Auth/ImageSection";
+import AuthSection from "../../components/Auth/AuthSection";
+import PhoneOtpModal from "../../components/Auth/PhoneOtpModal";
 const Login = () => {
   const [showPhonePopup, setShowPhonePopup] = useState(false);
 

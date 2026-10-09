@@ -1,5 +1,5 @@
 import { BriefcaseBusiness } from "lucide-react";
-import ProviderCard from "../../common/ProviderCard";
+import ProviderCard from "../../../common/ProviderCard";
 
 type Provider = {
   id: string;

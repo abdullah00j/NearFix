@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { History } from "lucide-react";
-import BookingHistory from "../../component/Pages/BookingHistory.tsx/BookingHistory";
-import BookingHistoryPills from "../../component/Pages/BookingHistory.tsx/BookingHistoryPills";
-import BookingHistoryNotifcationListing from "../../component/Pages/BookingHistory.tsx/BookingHistoryNotifcationListing";
+import BookingHistory from "../../components/Pages/COMMONPAGES/BookingHistory.tsx/BookingHistory";
+import BookingHistoryPills from "../../components/Pages/COMMONPAGES/BookingHistory.tsx/BookingHistoryPills";
+import BookingHistoryNotifcationListing from "../../components/Pages/COMMONPAGES/BookingHistory.tsx/BookingHistoryNotifcationListing";
 
 type HistoryStatus = "COMPLETED" | "CANCELED";
 type HistoryFilter = "ALL" | HistoryStatus;

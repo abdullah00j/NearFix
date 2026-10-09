@@ -4,6 +4,7 @@ import { UserProvider } from "./context/UserContext";
 import router from "./Router";
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
+import { agentPet } from "./lib/agentPet";
 
 function App() {
   useEffect(() => {
@@ -30,6 +31,14 @@ function App() {
       mediaQuery.removeEventListener("change", applyTheme);
       window.removeEventListener("nearfix:themechange", applyTheme);
     };
+  }, []);
+
+  useEffect(() => {
+    agentPet.greet("hi i am fixyy");
+
+    setTimeout(() => {
+      agentPet.idle();
+    }, 2000);
   }, []);
 
   return (

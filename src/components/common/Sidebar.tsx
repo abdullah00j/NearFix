@@ -1,21 +1,27 @@
 import {
+  BarChart3,
   Bell,
   Briefcase,
   CalendarDays,
   ChevronLeft,
+  CreditCard,
   History,
   LayoutDashboard,
   Radio,
   Settings,
+  ShieldCheck,
   Star,
   Sparkles,
+  Tags,
   TextQuote,
   UserRound,
+  UsersRound,
   Wallet,
   Activity,
   Store,
+  Wrench,
 } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useNavbarContext } from "../../context/NavbarContext";
 import { useCurrentUser } from "../../context/UserContext";
 
@@ -145,45 +151,45 @@ const AdminSideBar = {
     {
       name: "Dashboard",
       path: "/admin",
-      icon: TextQuote,
+      icon: LayoutDashboard,
     },
     {
       name: "Payments",
-      path: "/payments",
-      icon: Activity,
+      path: "/admin/payments",
+      icon: CreditCard,
     },
     {
       name: "Service Management",
-      path: "/service-management",
-      icon: Activity,
+      path: "/admin/service-management",
+      icon: Wrench,
     },
     {
       name: "Category Management",
-      path: "/category-management",
-      icon: Activity,
+      path: "/admin/category-management",
+      icon: Tags,
     },
     {
       name: "Customer Management",
-      path: "/customer-management",
-      icon: Activity,
+      path: "/admin/customer-management",
+      icon: UsersRound,
     },
     {
       name: "Notifications",
-      path: "/notifications",
-      icon: Activity,
+      path: "/admin/notifications",
+      icon: Bell,
     },
   ],
 
   subSideBar: [
     {
       name: "Provider Verification",
-      path: "/provider-verification",
-      icon: Activity,
+      path: "/admin/provider-verification",
+      icon: ShieldCheck,
     },
     {
       name: "Reports",
-      path: "/reports",
-      icon: Activity,
+      path: "/admin/reports",
+      icon: BarChart3,
     },
   ],
 };
@@ -265,9 +271,7 @@ function Sidebar() {
                 >
                   <Icon size={15} />
                 </span>
-                <Link to={item.path} className="text-sm font-medium">
-                  {item.name}
-                </Link>
+                <span className="text-sm font-medium">{item.name}</span>
               </button>
             );
           })}
@@ -299,33 +303,33 @@ function Sidebar() {
                   >
                     <Icon size={15} />
                   </span>
-                  <Link to={item.path} className="text-sm font-medium">
-                    {item.name}
-                  </Link>
+                  <span className="text-sm font-medium">{item.name}</span>
                 </button>
               );
             })}
           </div>
         </div>
       </div>
-
-      <button
-        type="button"
-        className="mt-3  flex w-full shrink-0 cursor-pointer items-center rounded-2xl border border-line bg-panel-soft px-3 py-4 shadow-md"
-        onClick={() => navigate("/become-provider")}
-      >
-        <div className="flex items-center gap-2">
-          <img
-            src="/logo.png"
-            alt="NearFix logo"
-            className="h-6 w-6 font-sans rounded-lg object-cover"
-          />
-          <p className="text-sm font-semibold font-sans">
-            Become a Provider
-            {/* <span className="text-primary">Fix</span> */}
-          </p>
-        </div>
-      </button>
+      {role?.some((roles) => roles === "CUSTOMER" || roles === "PROVIDER") && (
+        <button
+          type="button"
+          className="mt-3  flex w-full shrink-0 cursor-pointer items-center rounded-2xl border border-line bg-panel-soft px-3 py-4 shadow-md"
+          onClick={() => navigate("/become-provider")}
+        >
+          <div className="flex items-center gap-2">
+            <img
+              src="/logo.png"
+              alt="NearFix logo"
+              className="h-6 w-6 font-sans rounded-lg object-cover"
+            />
+            <p className="text-sm font-semibold font-sans">
+              {role?.includes("CUSTOMER")
+                ? "Become a Provider"
+                : "Change to User"}
+            </p>
+          </div>
+        </button>
+      )}
     </div>
   );
 }

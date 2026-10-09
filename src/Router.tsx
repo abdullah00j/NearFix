@@ -17,6 +17,8 @@ import CategoryManagement from "./pages/Admin/CategoryManagement";
 import ProviderVerification from "./pages/Admin/ProviderVerification";
 import Reports from "./pages/Admin/Reports";
 import CustomerManagement from "./pages/Admin/CustomerManagement";
+import ServiceManagementAdmin from "./pages/Admin/ServiceManagement";
+import AdminNotifications from "./pages/Admin/AdminNotifications";
 import Booking from "./pages/Common/Booking";
 import ProviderDashboard from "./pages/Provider/ProviderDashboard";
 import EarningsPage from "./pages/Provider/EarningsPage";
@@ -146,8 +148,8 @@ const router = createBrowserRouter([
             element: <PaymentManagement />,
           },
           {
-            path: "service-managment",
-            element: <ServiceManagement />,
+            path: "service-management",
+            element: <ServiceManagementAdmin />,
           },
           {
             path: "category-management",
@@ -161,6 +163,10 @@ const router = createBrowserRouter([
           {
             path: "reports",
             element: <Reports />,
+          },
+          {
+            path: "notifications",
+            element: <AdminNotifications />,
           },
         ],
       },

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
-import InputForAI from "../../component/Pages/AIAssistant/InputForAI";
-import AIHeader from "../../component/Pages/AIAssistant/AIHeader";
-import AIChatBox from "../../component/Pages/AIAssistant/AIChatBox";
+import InputForAI from "../../components/Pages/COMMONPAGES/AIAssistant/InputForAI";
+import AIHeader from "../../components/Pages/COMMONPAGES/AIAssistant/AIHeader";
+import AIChatBox from "../../components/Pages/COMMONPAGES/AIAssistant/AIChatBox";
 
 type AttachedImage = {
   id: string;

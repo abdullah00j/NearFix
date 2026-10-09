@@ -1,5 +1,5 @@
 import { Heart } from "lucide-react";
-import ProviderCard from "../../common/ProviderCard";
+import ProviderCard from "../../../common/ProviderCard";
 
 type FavouriteProvider = {
   id: string;

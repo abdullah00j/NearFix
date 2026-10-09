@@ -5,9 +5,10 @@ type PhoneOtpModalProps = {
   showPhonePopup: boolean;
   setShowPhonePopup: React.Dispatch<React.SetStateAction<boolean>>;
 };
-const PhoneOtpModal = ({ showPhonePopup, setShowPhonePopup }: PhoneOtpModalProps) => {
-
-
+const PhoneOtpModal = ({
+  showPhonePopup,
+  setShowPhonePopup,
+}: PhoneOtpModalProps) => {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [showOtp, setShowOtp] = useState(false);

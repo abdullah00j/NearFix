@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import ServiceProviderHeader from "../../component/Pages/ServiceProvider/ServiceProviderHeader";
-import ServiceProviderBar from "../../component/Pages/ServiceProvider/ServiceProviderBar";
-import ServiceProviderListing from "../../component/Pages/ServiceProvider/ServiceProviderListing";
+import ServiceProviderHeader from "../../components/Pages/CUSTOMER/ServiceProvider/ServiceProviderHeader";
+import ServiceProviderBar from "../../components/Pages/CUSTOMER/ServiceProvider/ServiceProviderBar";
+import ServiceProviderListing from "../../components/Pages/CUSTOMER/ServiceProvider/ServiceProviderListing";
 
 type Provider = {
   id: string;

@@ -1,7 +1,7 @@
 import { fetchAuthSession } from "aws-amplify/auth";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Loader from "./component/common/Loader";
+import Loader from "./components/common/Loader";
 import { useCurrentUser } from "./context/UserContext";
 
 type Role = "CUSTOMER" | "PROVIDER" | "ADMIN";
@@ -36,7 +36,7 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
           : [];
         setRole(validGroups);
         console.log(validGroups);
-
+        console.log("User role is:", validGroups);
         setIsAuthenticated(!!tokens);
       } catch (error) {
         console.log("No active session", error);
@@ -47,7 +47,7 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
     checkSession();
   }, [setRole]);
 
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null || (isAuthenticated && role === null)) {
     return (
       <div className="h-screen flex items-center justify-center">
         <Loader label="Checking your session..." />
@@ -63,8 +63,15 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (!role?.some((roles) => allowedRoles.includes(roles))) {
-    return <Navigate to="/" replace />;
+  if (!role?.some((userRole) => allowedRoles.includes(userRole))) {
+    const homePath = role?.includes("ADMIN")
+      ? "/admin"
+      : role?.includes("PROVIDER")
+        ? "/provider"
+        : role?.includes("CUSTOMER")
+          ? "/"
+          : "/login";
+    return <Navigate to={homePath} replace />;
   }
 
   // Logged in + correct role

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import SettingHeader from "../../component/Pages/Setting/SettingHeader";
-import SettingthemeAppearance from "../../component/Pages/Setting/SettingthemeAppearance";
-import SettingNotificationAppearance from "../../component/Pages/Setting/SettingNotificationAppearance";
-import SettingLanguagePrefrences from "../../component/Pages/Setting/SettingLanguagePrefrences";
+import SettingHeader from "../../components/Pages/COMMONPAGES/Setting/SettingHeader";
+import SettingthemeAppearance from "../../components/Pages/COMMONPAGES/Setting/SettingthemeAppearance";
+import SettingNotificationAppearance from "../../components/Pages/COMMONPAGES/Setting/SettingNotificationAppearance";
+import SettingLanguagePrefrences from "../../components/Pages/COMMONPAGES/Setting/SettingLanguagePrefrences";
 
 type Theme = "Light" | "Dark" | "System";
 type NotificationPreferences = {

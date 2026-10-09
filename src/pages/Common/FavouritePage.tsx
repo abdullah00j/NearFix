@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 
-import FavHeader from "../../component/Pages/Favourite/FavHeader";
-import FavBar from "../../component/Pages/Favourite/FavBar";
-import FavListing from "../../component/Pages/Favourite/FavListing";
+import FavHeader from "../../components/Pages/CUSTOMER/Favourite/FavHeader";
+import FavBar from "../../components/Pages/CUSTOMER/Favourite/FavBar";
+import FavListing from "../../components/Pages/CUSTOMER/Favourite/FavListing";
 
 type FavouriteProvider = {
   id: string;

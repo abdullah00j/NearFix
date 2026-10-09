@@ -1,10 +1,10 @@
 import { useState } from "react";
-import NotificationHeader from "../../component/Pages/Notifications/NotificationHeader";
-import NotificationList from "../../component/Pages/Notifications/NotificationList";
+import NotificationHeader from "../../components/Pages/COMMONPAGES/Notifications/NotificationHeader";
+import NotificationList from "../../components/Pages/COMMONPAGES/Notifications/NotificationList";
 import {
   initialNotifications,
   type NotificationItem,
-} from "../../component/Pages/Notifications/notificationData";
+} from "../../components/Pages/COMMONPAGES/Notifications/notificationData";
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] =
