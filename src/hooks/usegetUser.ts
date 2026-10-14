@@ -10,7 +10,7 @@ const getUserProfile = async (userId: string) => {
     { id: userId },
     {
       authMode: "userPool",
-      selectionSet: ["id", "name", "email", "profileImage"],
+      selectionSet: ["id", "name", "email", "profileImage", "activeRole"],
     },
   );
 
@@ -23,7 +23,7 @@ const getUserProfile = async (userId: string) => {
 
 type UserProfile = Pick<
   Schema["NearFixUser"]["type"],
-  "id" | "name" | "email" | "profileImage"
+  "id" | "name" | "email" | "profileImage" | "activeRole"
 >;
 
 const loadCurrentUserProfile = async (): Promise<UserProfile> => {

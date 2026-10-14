@@ -15,10 +15,6 @@ const logger = new Logger({
 });
 
 export const handler: PreTokenGenerationTriggerHandler = async (event) => {
-  logger.info("===== PRE TOKEN GENERATION =====");
-  logger.info("UserPoolId:", event.userPoolId);
-  logger.info("Username:", event.userName);
-
   const existing = await client.send(
     new AdminListGroupsForUserCommand({
       UserPoolId: event.userPoolId,
@@ -31,15 +27,13 @@ export const handler: PreTokenGenerationTriggerHandler = async (event) => {
       (group): group is string => !!group,
     ) ?? [];
 
-  logger.info("Existing groups:", { existingGroups });
+  const hasNearfixGroup = existingGroups.some((group) =>
+    NEARFIX_GROUPS.includes(group),
+  );
+  let groupsToOverride = existingGroups;
 
-  let role = existingGroups.find((group) => NEARFIX_GROUPS.includes(group));
-
-  if (!role) {
-    role = "CUSTOMER";
-
-    logger.info("Adding user to CUSTOMER...");
-
+  if (!hasNearfixGroup) {
+    logger.info("Adding user to CUSTOMER");
     await client.send(
       new AdminAddUserToGroupCommand({
         UserPoolId: event.userPoolId,
@@ -47,31 +41,21 @@ export const handler: PreTokenGenerationTriggerHandler = async (event) => {
         GroupName: "CUSTOMER",
       }),
     );
-
-    logger.info("Successfully added user to CUSTOMER");
+    groupsToOverride = [...existingGroups, "CUSTOMER"];
   }
-
-  // Add CUSTOMER to the token being generated RIGHT NOW.
-  const groupsToOverride = [
-    ...existingGroups.filter((group) => !NEARFIX_GROUPS.includes(group)),
-    role,
-  ];
 
   event.response = {
     ...event.response,
-
     claimsOverrideDetails: {
       ...event.response.claimsOverrideDetails,
-
       groupOverrideDetails: {
         ...event.response.claimsOverrideDetails?.groupOverrideDetails,
-
         groupsToOverride,
       },
     },
   };
 
-  logger.info("Groups added to current token:", { groupsToOverride });
+  logger.info("Groups in token:", { groupsToOverride });
 
   return event;
 };

@@ -24,6 +24,10 @@ export const createBooking = /* GraphQL */ `mutation CreateBooking(
     location
     photos
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -31,6 +35,7 @@ export const createBooking = /* GraphQL */ `mutation CreateBooking(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -116,12 +121,70 @@ export const createFavourite = /* GraphQL */ `mutation CreateFavourite(
   APITypes.CreateFavouriteMutationVariables,
   APITypes.CreateFavouriteMutation
 >;
+export const createMyProviderApplication =
+  /* GraphQL */ `mutation CreateMyProviderApplication(
+  $CNICBackSide: String
+  $CNICFrontSide: String
+  $CNICNAME: String
+  $CNICNumber: String
+  $businessName: String!
+  $selfie: String
+  $serviceArea: String!
+) {
+  createMyProviderApplication(
+    CNICBackSide: $CNICBackSide
+    CNICFrontSide: $CNICFrontSide
+    CNICNAME: $CNICNAME
+    CNICNumber: $CNICNumber
+    businessName: $businessName
+    selfie: $selfie
+    serviceArea: $serviceArea
+  ) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
+    applicationStatus
+    businessName
+    createdAt
+    id
+    owner
+    selfie
+    serviceArea
+    updatedAt
+    userId
+    users {
+      createdAt
+      email
+      id
+      isPhoneVerified
+      location
+      name
+      owner
+      phone
+      profileImage
+      pushToken
+      status
+      updatedAt
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedMutation<
+    APITypes.CreateMyProviderApplicationMutationVariables,
+    APITypes.CreateMyProviderApplicationMutation
+  >;
 export const createNearFixProvider =
   /* GraphQL */ `mutation CreateNearFixProvider(
   $condition: ModelNearFixProviderConditionInput
   $input: CreateNearFixProviderInput!
 ) {
   createNearFixProvider(condition: $condition, input: $input) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
     availabilityStatus
     bio
     bookings {
@@ -137,6 +200,7 @@ export const createNearFixProvider =
       nextToken
       __typename
     }
+    selfie
     serviceArea
     services {
       nextToken
@@ -194,6 +258,10 @@ export const createNearFixUser = /* GraphQL */ `mutation CreateNearFixUser(
     phone
     profileImage
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -201,10 +269,27 @@ export const createNearFixUser = /* GraphQL */ `mutation CreateNearFixUser(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
       verificationStatus
+      __typename
+    }
+    providerApplication {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
+      applicationStatus
+      businessName
+      createdAt
+      id
+      owner
+      selfie
+      serviceArea
+      updatedAt
+      userId
       __typename
     }
     pushToken
@@ -265,6 +350,47 @@ export const createNotification = /* GraphQL */ `mutation CreateNotification(
   APITypes.CreateNotificationMutationVariables,
   APITypes.CreateNotificationMutation
 >;
+export const createProviderApplication =
+  /* GraphQL */ `mutation CreateProviderApplication(
+  $condition: ModelProviderApplicationConditionInput
+  $input: CreateProviderApplicationInput!
+) {
+  createProviderApplication(condition: $condition, input: $input) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
+    applicationStatus
+    businessName
+    createdAt
+    id
+    owner
+    selfie
+    serviceArea
+    updatedAt
+    userId
+    users {
+      createdAt
+      email
+      id
+      isPhoneVerified
+      location
+      name
+      owner
+      phone
+      profileImage
+      pushToken
+      status
+      updatedAt
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedMutation<
+    APITypes.CreateProviderApplicationMutationVariables,
+    APITypes.CreateProviderApplicationMutation
+  >;
 export const createProviderService =
   /* GraphQL */ `mutation CreateProviderService(
   $condition: ModelProviderServiceConditionInput
@@ -279,6 +405,10 @@ export const createProviderService =
     owner
     price
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -286,6 +416,7 @@ export const createProviderService =
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -311,6 +442,10 @@ export const createReviews = /* GraphQL */ `mutation CreateReviews(
     createdAt
     id
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -318,6 +453,7 @@ export const createReviews = /* GraphQL */ `mutation CreateReviews(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -441,6 +577,10 @@ export const deleteBooking = /* GraphQL */ `mutation DeleteBooking(
     location
     photos
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -448,6 +588,7 @@ export const deleteBooking = /* GraphQL */ `mutation DeleteBooking(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -539,6 +680,10 @@ export const deleteNearFixProvider =
   $input: DeleteNearFixProviderInput!
 ) {
   deleteNearFixProvider(condition: $condition, input: $input) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
     availabilityStatus
     bio
     bookings {
@@ -554,6 +699,7 @@ export const deleteNearFixProvider =
       nextToken
       __typename
     }
+    selfie
     serviceArea
     services {
       nextToken
@@ -611,6 +757,10 @@ export const deleteNearFixUser = /* GraphQL */ `mutation DeleteNearFixUser(
     phone
     profileImage
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -618,10 +768,27 @@ export const deleteNearFixUser = /* GraphQL */ `mutation DeleteNearFixUser(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
       verificationStatus
+      __typename
+    }
+    providerApplication {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
+      applicationStatus
+      businessName
+      createdAt
+      id
+      owner
+      selfie
+      serviceArea
+      updatedAt
+      userId
       __typename
     }
     pushToken
@@ -682,6 +849,47 @@ export const deleteNotification = /* GraphQL */ `mutation DeleteNotification(
   APITypes.DeleteNotificationMutationVariables,
   APITypes.DeleteNotificationMutation
 >;
+export const deleteProviderApplication =
+  /* GraphQL */ `mutation DeleteProviderApplication(
+  $condition: ModelProviderApplicationConditionInput
+  $input: DeleteProviderApplicationInput!
+) {
+  deleteProviderApplication(condition: $condition, input: $input) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
+    applicationStatus
+    businessName
+    createdAt
+    id
+    owner
+    selfie
+    serviceArea
+    updatedAt
+    userId
+    users {
+      createdAt
+      email
+      id
+      isPhoneVerified
+      location
+      name
+      owner
+      phone
+      profileImage
+      pushToken
+      status
+      updatedAt
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedMutation<
+    APITypes.DeleteProviderApplicationMutationVariables,
+    APITypes.DeleteProviderApplicationMutation
+  >;
 export const deleteProviderService =
   /* GraphQL */ `mutation DeleteProviderService(
   $condition: ModelProviderServiceConditionInput
@@ -696,6 +904,10 @@ export const deleteProviderService =
     owner
     price
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -703,6 +915,7 @@ export const deleteProviderService =
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -728,6 +941,10 @@ export const deleteReviews = /* GraphQL */ `mutation DeleteReviews(
     createdAt
     id
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -735,6 +952,7 @@ export const deleteReviews = /* GraphQL */ `mutation DeleteReviews(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -842,6 +1060,13 @@ export const deleteWarning = /* GraphQL */ `mutation DeleteWarning(
   APITypes.DeleteWarningMutationVariables,
   APITypes.DeleteWarningMutation
 >;
+export const ensureUser = /* GraphQL */ `mutation EnsureUser {
+  ensureUser
+}
+` as GeneratedMutation<
+  APITypes.EnsureUserMutationVariables,
+  APITypes.EnsureUserMutation
+>;
 export const updateBooking = /* GraphQL */ `mutation UpdateBooking(
   $condition: ModelBookingConditionInput
   $input: UpdateBookingInput!
@@ -858,6 +1083,10 @@ export const updateBooking = /* GraphQL */ `mutation UpdateBooking(
     location
     photos
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -865,6 +1094,7 @@ export const updateBooking = /* GraphQL */ `mutation UpdateBooking(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -956,6 +1186,10 @@ export const updateNearFixProvider =
   $input: UpdateNearFixProviderInput!
 ) {
   updateNearFixProvider(condition: $condition, input: $input) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
     availabilityStatus
     bio
     bookings {
@@ -971,6 +1205,7 @@ export const updateNearFixProvider =
       nextToken
       __typename
     }
+    selfie
     serviceArea
     services {
       nextToken
@@ -1028,6 +1263,10 @@ export const updateNearFixUser = /* GraphQL */ `mutation UpdateNearFixUser(
     phone
     profileImage
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -1035,10 +1274,27 @@ export const updateNearFixUser = /* GraphQL */ `mutation UpdateNearFixUser(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
       verificationStatus
+      __typename
+    }
+    providerApplication {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
+      applicationStatus
+      businessName
+      createdAt
+      id
+      owner
+      selfie
+      serviceArea
+      updatedAt
+      userId
       __typename
     }
     pushToken
@@ -1099,6 +1355,47 @@ export const updateNotification = /* GraphQL */ `mutation UpdateNotification(
   APITypes.UpdateNotificationMutationVariables,
   APITypes.UpdateNotificationMutation
 >;
+export const updateProviderApplication =
+  /* GraphQL */ `mutation UpdateProviderApplication(
+  $condition: ModelProviderApplicationConditionInput
+  $input: UpdateProviderApplicationInput!
+) {
+  updateProviderApplication(condition: $condition, input: $input) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
+    applicationStatus
+    businessName
+    createdAt
+    id
+    owner
+    selfie
+    serviceArea
+    updatedAt
+    userId
+    users {
+      createdAt
+      email
+      id
+      isPhoneVerified
+      location
+      name
+      owner
+      phone
+      profileImage
+      pushToken
+      status
+      updatedAt
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedMutation<
+    APITypes.UpdateProviderApplicationMutationVariables,
+    APITypes.UpdateProviderApplicationMutation
+  >;
 export const updateProviderService =
   /* GraphQL */ `mutation UpdateProviderService(
   $condition: ModelProviderServiceConditionInput
@@ -1113,6 +1410,10 @@ export const updateProviderService =
     owner
     price
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -1120,6 +1421,7 @@ export const updateProviderService =
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -1145,6 +1447,10 @@ export const updateReviews = /* GraphQL */ `mutation UpdateReviews(
     createdAt
     id
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -1152,6 +1458,7 @@ export const updateReviews = /* GraphQL */ `mutation UpdateReviews(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId

@@ -27,6 +27,10 @@ export type Booking = {
 
 export type NearFixProvider = {
   __typename: "NearFixProvider";
+  CNICBackSide?: string | null;
+  CNICFrontSide?: string | null;
+  CNICNAME?: string | null;
+  CNICNumber?: string | null;
   availabilityStatus: AvailabilityStatus;
   bio?: string | null;
   bookings?: ModelBookingConnection | null;
@@ -36,6 +40,7 @@ export type NearFixProvider = {
   id: string;
   owner?: string | null;
   reviews?: ModelReviewsConnection | null;
+  selfie?: string | null;
   serviceArea?: string | null;
   services?: ModelProviderServiceConnection | null;
   updatedAt: string;
@@ -97,6 +102,7 @@ export type NearFixUser = {
   phone?: string | null;
   profileImage?: string | null;
   provider?: NearFixProvider | null;
+  providerApplication?: ProviderApplication | null;
   pushToken?: string | null;
   reviews?: ModelReviewsConnection | null;
   status: Status;
@@ -141,6 +147,30 @@ export type Notification = {
   user?: NearFixUser | null;
   userId: string;
 };
+
+export type ProviderApplication = {
+  __typename: "ProviderApplication";
+  CNICBackSide?: string | null;
+  CNICFrontSide?: string | null;
+  CNICNAME?: string | null;
+  CNICNumber?: string | null;
+  applicationStatus: ApplicationStatus;
+  businessName: string;
+  createdAt: string;
+  id: string;
+  owner?: string | null;
+  selfie?: string | null;
+  serviceArea: string;
+  updatedAt: string;
+  userId: string;
+  users?: NearFixUser | null;
+};
+
+export enum ApplicationStatus {
+  APPROVED = "APPROVED",
+  PENDING = "PENDING",
+  REJECTED = "REJECTED",
+}
 
 export enum Status {
   ACTIVE = "ACTIVE",
@@ -365,6 +395,10 @@ export type ModelFavouriteFilterInput = {
 };
 
 export type ModelNearFixProviderFilterInput = {
+  CNICBackSide?: ModelStringInput | null;
+  CNICFrontSide?: ModelStringInput | null;
+  CNICNAME?: ModelStringInput | null;
+  CNICNumber?: ModelStringInput | null;
   and?: Array<ModelNearFixProviderFilterInput | null> | null;
   availabilityStatus?: ModelAvailabilityStatusInput | null;
   bio?: ModelStringInput | null;
@@ -375,6 +409,7 @@ export type ModelNearFixProviderFilterInput = {
   not?: ModelNearFixProviderFilterInput | null;
   or?: Array<ModelNearFixProviderFilterInput | null> | null;
   owner?: ModelStringInput | null;
+  selfie?: ModelStringInput | null;
   serviceArea?: ModelStringInput | null;
   updatedAt?: ModelStringInput | null;
   userId?: ModelStringInput | null;
@@ -439,6 +474,36 @@ export type ModelNotificationFilterInput = {
   title?: ModelStringInput | null;
   updatedAt?: ModelStringInput | null;
   userId?: ModelStringInput | null;
+};
+
+export type ModelProviderApplicationFilterInput = {
+  CNICBackSide?: ModelStringInput | null;
+  CNICFrontSide?: ModelStringInput | null;
+  CNICNAME?: ModelStringInput | null;
+  CNICNumber?: ModelStringInput | null;
+  and?: Array<ModelProviderApplicationFilterInput | null> | null;
+  applicationStatus?: ModelApplicationStatusInput | null;
+  businessName?: ModelStringInput | null;
+  createdAt?: ModelStringInput | null;
+  id?: ModelIDInput | null;
+  not?: ModelProviderApplicationFilterInput | null;
+  or?: Array<ModelProviderApplicationFilterInput | null> | null;
+  owner?: ModelStringInput | null;
+  selfie?: ModelStringInput | null;
+  serviceArea?: ModelStringInput | null;
+  updatedAt?: ModelStringInput | null;
+  userId?: ModelStringInput | null;
+};
+
+export type ModelApplicationStatusInput = {
+  eq?: ApplicationStatus | null;
+  ne?: ApplicationStatus | null;
+};
+
+export type ModelProviderApplicationConnection = {
+  __typename: "ModelProviderApplicationConnection";
+  items: Array<ProviderApplication | null>;
+  nextToken?: string | null;
 };
 
 export type ModelProviderServiceFilterInput = {
@@ -604,6 +669,10 @@ export type CreateFavouriteInput = {
 };
 
 export type ModelNearFixProviderConditionInput = {
+  CNICBackSide?: ModelStringInput | null;
+  CNICFrontSide?: ModelStringInput | null;
+  CNICNAME?: ModelStringInput | null;
+  CNICNumber?: ModelStringInput | null;
   and?: Array<ModelNearFixProviderConditionInput | null> | null;
   availabilityStatus?: ModelAvailabilityStatusInput | null;
   bio?: ModelStringInput | null;
@@ -613,6 +682,7 @@ export type ModelNearFixProviderConditionInput = {
   not?: ModelNearFixProviderConditionInput | null;
   or?: Array<ModelNearFixProviderConditionInput | null> | null;
   owner?: ModelStringInput | null;
+  selfie?: ModelStringInput | null;
   serviceArea?: ModelStringInput | null;
   updatedAt?: ModelStringInput | null;
   userId?: ModelStringInput | null;
@@ -620,11 +690,16 @@ export type ModelNearFixProviderConditionInput = {
 };
 
 export type CreateNearFixProviderInput = {
+  CNICBackSide?: string | null;
+  CNICFrontSide?: string | null;
+  CNICNAME?: string | null;
+  CNICNumber?: string | null;
   availabilityStatus: AvailabilityStatus;
   bio?: string | null;
   businessName?: string | null;
   experience?: string | null;
   id?: string | null;
+  selfie?: string | null;
   serviceArea?: string | null;
   userId: string;
   verificationStatus: VerificationStatus;
@@ -679,6 +754,37 @@ export type CreateNotificationInput = {
   isRead?: boolean | null;
   providerId?: string | null;
   title?: string | null;
+  userId: string;
+};
+
+export type ModelProviderApplicationConditionInput = {
+  CNICBackSide?: ModelStringInput | null;
+  CNICFrontSide?: ModelStringInput | null;
+  CNICNAME?: ModelStringInput | null;
+  CNICNumber?: ModelStringInput | null;
+  and?: Array<ModelProviderApplicationConditionInput | null> | null;
+  applicationStatus?: ModelApplicationStatusInput | null;
+  businessName?: ModelStringInput | null;
+  createdAt?: ModelStringInput | null;
+  not?: ModelProviderApplicationConditionInput | null;
+  or?: Array<ModelProviderApplicationConditionInput | null> | null;
+  owner?: ModelStringInput | null;
+  selfie?: ModelStringInput | null;
+  serviceArea?: ModelStringInput | null;
+  updatedAt?: ModelStringInput | null;
+  userId?: ModelStringInput | null;
+};
+
+export type CreateProviderApplicationInput = {
+  CNICBackSide?: string | null;
+  CNICFrontSide?: string | null;
+  CNICNAME?: string | null;
+  CNICNumber?: string | null;
+  applicationStatus: ApplicationStatus;
+  businessName: string;
+  id?: string | null;
+  selfie?: string | null;
+  serviceArea: string;
   userId: string;
 };
 
@@ -804,6 +910,10 @@ export type DeleteNotificationInput = {
   id: string;
 };
 
+export type DeleteProviderApplicationInput = {
+  id: string;
+};
+
 export type DeleteProviderServiceInput = {
   id: string;
 };
@@ -851,11 +961,16 @@ export type UpdateFavouriteInput = {
 };
 
 export type UpdateNearFixProviderInput = {
+  CNICBackSide?: string | null;
+  CNICFrontSide?: string | null;
+  CNICNAME?: string | null;
+  CNICNumber?: string | null;
   availabilityStatus?: AvailabilityStatus | null;
   bio?: string | null;
   businessName?: string | null;
   experience?: string | null;
   id: string;
+  selfie?: string | null;
   serviceArea?: string | null;
   userId?: string | null;
   verificationStatus?: VerificationStatus | null;
@@ -879,6 +994,19 @@ export type UpdateNotificationInput = {
   isRead?: boolean | null;
   providerId?: string | null;
   title?: string | null;
+  userId?: string | null;
+};
+
+export type UpdateProviderApplicationInput = {
+  CNICBackSide?: string | null;
+  CNICFrontSide?: string | null;
+  CNICNAME?: string | null;
+  CNICNumber?: string | null;
+  applicationStatus?: ApplicationStatus | null;
+  businessName?: string | null;
+  id: string;
+  selfie?: string | null;
+  serviceArea?: string | null;
   userId?: string | null;
 };
 
@@ -1001,6 +1129,10 @@ export type ModelSubscriptionFavouriteFilterInput = {
 };
 
 export type ModelSubscriptionNearFixProviderFilterInput = {
+  CNICBackSide?: ModelSubscriptionStringInput | null;
+  CNICFrontSide?: ModelSubscriptionStringInput | null;
+  CNICNAME?: ModelSubscriptionStringInput | null;
+  CNICNumber?: ModelSubscriptionStringInput | null;
   and?: Array<ModelSubscriptionNearFixProviderFilterInput | null> | null;
   availabilityStatus?: ModelSubscriptionStringInput | null;
   bio?: ModelSubscriptionStringInput | null;
@@ -1010,6 +1142,7 @@ export type ModelSubscriptionNearFixProviderFilterInput = {
   id?: ModelSubscriptionIDInput | null;
   or?: Array<ModelSubscriptionNearFixProviderFilterInput | null> | null;
   owner?: ModelStringInput | null;
+  selfie?: ModelSubscriptionStringInput | null;
   serviceArea?: ModelSubscriptionStringInput | null;
   updatedAt?: ModelSubscriptionStringInput | null;
   userId?: ModelSubscriptionStringInput | null;
@@ -1043,6 +1176,24 @@ export type ModelSubscriptionNotificationFilterInput = {
   owner?: ModelStringInput | null;
   providerId?: ModelSubscriptionStringInput | null;
   title?: ModelSubscriptionStringInput | null;
+  updatedAt?: ModelSubscriptionStringInput | null;
+  userId?: ModelSubscriptionStringInput | null;
+};
+
+export type ModelSubscriptionProviderApplicationFilterInput = {
+  CNICBackSide?: ModelSubscriptionStringInput | null;
+  CNICFrontSide?: ModelSubscriptionStringInput | null;
+  CNICNAME?: ModelSubscriptionStringInput | null;
+  CNICNumber?: ModelSubscriptionStringInput | null;
+  and?: Array<ModelSubscriptionProviderApplicationFilterInput | null> | null;
+  applicationStatus?: ModelSubscriptionStringInput | null;
+  businessName?: ModelSubscriptionStringInput | null;
+  createdAt?: ModelSubscriptionStringInput | null;
+  id?: ModelSubscriptionIDInput | null;
+  or?: Array<ModelSubscriptionProviderApplicationFilterInput | null> | null;
+  owner?: ModelStringInput | null;
+  selfie?: ModelSubscriptionStringInput | null;
+  serviceArea?: ModelSubscriptionStringInput | null;
   updatedAt?: ModelSubscriptionStringInput | null;
   userId?: ModelSubscriptionStringInput | null;
 };
@@ -1136,6 +1287,10 @@ export type GetBookingQuery = {
     photos?: Array<string | null> | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -1143,6 +1298,7 @@ export type GetBookingQuery = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -1226,6 +1382,10 @@ export type GetNearFixProviderQueryVariables = {
 export type GetNearFixProviderQuery = {
   getNearFixProvider?: {
     __typename: "NearFixProvider";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
     availabilityStatus: AvailabilityStatus;
     bio?: string | null;
     bookings?: {
@@ -1241,6 +1401,7 @@ export type GetNearFixProviderQuery = {
       __typename: "ModelReviewsConnection";
       nextToken?: string | null;
     } | null;
+    selfie?: string | null;
     serviceArea?: string | null;
     services?: {
       __typename: "ModelProviderServiceConnection";
@@ -1297,6 +1458,10 @@ export type GetNearFixUserQuery = {
     profileImage?: string | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -1304,10 +1469,27 @@ export type GetNearFixUserQuery = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
       verificationStatus: VerificationStatus;
+    } | null;
+    providerApplication?: {
+      __typename: "ProviderApplication";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
+      applicationStatus: ApplicationStatus;
+      businessName: string;
+      createdAt: string;
+      id: string;
+      owner?: string | null;
+      selfie?: string | null;
+      serviceArea: string;
+      updatedAt: string;
+      userId: string;
     } | null;
     pushToken?: string | null;
     reviews?: {
@@ -1361,6 +1543,44 @@ export type GetNotificationQuery = {
   } | null;
 };
 
+export type GetProviderApplicationQueryVariables = {
+  id: string;
+};
+
+export type GetProviderApplicationQuery = {
+  getProviderApplication?: {
+    __typename: "ProviderApplication";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
+    applicationStatus: ApplicationStatus;
+    businessName: string;
+    createdAt: string;
+    id: string;
+    owner?: string | null;
+    selfie?: string | null;
+    serviceArea: string;
+    updatedAt: string;
+    userId: string;
+    users?: {
+      __typename: "NearFixUser";
+      createdAt: string;
+      email: string;
+      id: string;
+      isPhoneVerified?: boolean | null;
+      location?: string | null;
+      name: string;
+      owner?: string | null;
+      phone?: string | null;
+      profileImage?: string | null;
+      pushToken?: string | null;
+      status: Status;
+      updatedAt: string;
+    } | null;
+  } | null;
+};
+
 export type GetProviderServiceQueryVariables = {
   id: string;
 };
@@ -1377,6 +1597,10 @@ export type GetProviderServiceQuery = {
     price: number;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -1384,6 +1608,7 @@ export type GetProviderServiceQuery = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -1407,6 +1632,10 @@ export type GetReviewsQuery = {
     id: string;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -1414,6 +1643,7 @@ export type GetReviewsQuery = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -1599,6 +1829,10 @@ export type ListNearFixProvidersQuery = {
     __typename: "ModelNearFixProviderConnection";
     items: Array<{
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -1606,6 +1840,7 @@ export type ListNearFixProvidersQuery = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -1661,6 +1896,35 @@ export type ListNotificationsQuery = {
       owner?: string | null;
       providerId?: string | null;
       title?: string | null;
+      updatedAt: string;
+      userId: string;
+    } | null>;
+    nextToken?: string | null;
+  } | null;
+};
+
+export type ListProviderApplicationsQueryVariables = {
+  filter?: ModelProviderApplicationFilterInput | null;
+  limit?: number | null;
+  nextToken?: string | null;
+};
+
+export type ListProviderApplicationsQuery = {
+  listProviderApplications?: {
+    __typename: "ModelProviderApplicationConnection";
+    items: Array<{
+      __typename: "ProviderApplication";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
+      applicationStatus: ApplicationStatus;
+      businessName: string;
+      createdAt: string;
+      id: string;
+      owner?: string | null;
+      selfie?: string | null;
+      serviceArea: string;
       updatedAt: string;
       userId: string;
     } | null>;
@@ -1790,6 +2054,10 @@ export type CreateBookingMutation = {
     photos?: Array<string | null> | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -1797,6 +2065,7 @@ export type CreateBookingMutation = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -1875,6 +2144,50 @@ export type CreateFavouriteMutation = {
   } | null;
 };
 
+export type CreateMyProviderApplicationMutationVariables = {
+  CNICBackSide?: string | null;
+  CNICFrontSide?: string | null;
+  CNICNAME?: string | null;
+  CNICNumber?: string | null;
+  businessName: string;
+  selfie?: string | null;
+  serviceArea: string;
+};
+
+export type CreateMyProviderApplicationMutation = {
+  createMyProviderApplication?: {
+    __typename: "ProviderApplication";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
+    applicationStatus: ApplicationStatus;
+    businessName: string;
+    createdAt: string;
+    id: string;
+    owner?: string | null;
+    selfie?: string | null;
+    serviceArea: string;
+    updatedAt: string;
+    userId: string;
+    users?: {
+      __typename: "NearFixUser";
+      createdAt: string;
+      email: string;
+      id: string;
+      isPhoneVerified?: boolean | null;
+      location?: string | null;
+      name: string;
+      owner?: string | null;
+      phone?: string | null;
+      profileImage?: string | null;
+      pushToken?: string | null;
+      status: Status;
+      updatedAt: string;
+    } | null;
+  } | null;
+};
+
 export type CreateNearFixProviderMutationVariables = {
   condition?: ModelNearFixProviderConditionInput | null;
   input: CreateNearFixProviderInput;
@@ -1883,6 +2196,10 @@ export type CreateNearFixProviderMutationVariables = {
 export type CreateNearFixProviderMutation = {
   createNearFixProvider?: {
     __typename: "NearFixProvider";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
     availabilityStatus: AvailabilityStatus;
     bio?: string | null;
     bookings?: {
@@ -1898,6 +2215,7 @@ export type CreateNearFixProviderMutation = {
       __typename: "ModelReviewsConnection";
       nextToken?: string | null;
     } | null;
+    selfie?: string | null;
     serviceArea?: string | null;
     services?: {
       __typename: "ModelProviderServiceConnection";
@@ -1955,6 +2273,10 @@ export type CreateNearFixUserMutation = {
     profileImage?: string | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -1962,10 +2284,27 @@ export type CreateNearFixUserMutation = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
       verificationStatus: VerificationStatus;
+    } | null;
+    providerApplication?: {
+      __typename: "ProviderApplication";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
+      applicationStatus: ApplicationStatus;
+      businessName: string;
+      createdAt: string;
+      id: string;
+      owner?: string | null;
+      selfie?: string | null;
+      serviceArea: string;
+      updatedAt: string;
+      userId: string;
     } | null;
     pushToken?: string | null;
     reviews?: {
@@ -2020,6 +2359,45 @@ export type CreateNotificationMutation = {
   } | null;
 };
 
+export type CreateProviderApplicationMutationVariables = {
+  condition?: ModelProviderApplicationConditionInput | null;
+  input: CreateProviderApplicationInput;
+};
+
+export type CreateProviderApplicationMutation = {
+  createProviderApplication?: {
+    __typename: "ProviderApplication";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
+    applicationStatus: ApplicationStatus;
+    businessName: string;
+    createdAt: string;
+    id: string;
+    owner?: string | null;
+    selfie?: string | null;
+    serviceArea: string;
+    updatedAt: string;
+    userId: string;
+    users?: {
+      __typename: "NearFixUser";
+      createdAt: string;
+      email: string;
+      id: string;
+      isPhoneVerified?: boolean | null;
+      location?: string | null;
+      name: string;
+      owner?: string | null;
+      phone?: string | null;
+      profileImage?: string | null;
+      pushToken?: string | null;
+      status: Status;
+      updatedAt: string;
+    } | null;
+  } | null;
+};
+
 export type CreateProviderServiceMutationVariables = {
   condition?: ModelProviderServiceConditionInput | null;
   input: CreateProviderServiceInput;
@@ -2037,6 +2415,10 @@ export type CreateProviderServiceMutation = {
     price: number;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -2044,6 +2426,7 @@ export type CreateProviderServiceMutation = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -2068,6 +2451,10 @@ export type CreateReviewsMutation = {
     id: string;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -2075,6 +2462,7 @@ export type CreateReviewsMutation = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -2195,6 +2583,10 @@ export type DeleteBookingMutation = {
     photos?: Array<string | null> | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -2202,6 +2594,7 @@ export type DeleteBookingMutation = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -2288,6 +2681,10 @@ export type DeleteNearFixProviderMutationVariables = {
 export type DeleteNearFixProviderMutation = {
   deleteNearFixProvider?: {
     __typename: "NearFixProvider";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
     availabilityStatus: AvailabilityStatus;
     bio?: string | null;
     bookings?: {
@@ -2303,6 +2700,7 @@ export type DeleteNearFixProviderMutation = {
       __typename: "ModelReviewsConnection";
       nextToken?: string | null;
     } | null;
+    selfie?: string | null;
     serviceArea?: string | null;
     services?: {
       __typename: "ModelProviderServiceConnection";
@@ -2360,6 +2758,10 @@ export type DeleteNearFixUserMutation = {
     profileImage?: string | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -2367,10 +2769,27 @@ export type DeleteNearFixUserMutation = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
       verificationStatus: VerificationStatus;
+    } | null;
+    providerApplication?: {
+      __typename: "ProviderApplication";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
+      applicationStatus: ApplicationStatus;
+      businessName: string;
+      createdAt: string;
+      id: string;
+      owner?: string | null;
+      selfie?: string | null;
+      serviceArea: string;
+      updatedAt: string;
+      userId: string;
     } | null;
     pushToken?: string | null;
     reviews?: {
@@ -2425,6 +2844,45 @@ export type DeleteNotificationMutation = {
   } | null;
 };
 
+export type DeleteProviderApplicationMutationVariables = {
+  condition?: ModelProviderApplicationConditionInput | null;
+  input: DeleteProviderApplicationInput;
+};
+
+export type DeleteProviderApplicationMutation = {
+  deleteProviderApplication?: {
+    __typename: "ProviderApplication";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
+    applicationStatus: ApplicationStatus;
+    businessName: string;
+    createdAt: string;
+    id: string;
+    owner?: string | null;
+    selfie?: string | null;
+    serviceArea: string;
+    updatedAt: string;
+    userId: string;
+    users?: {
+      __typename: "NearFixUser";
+      createdAt: string;
+      email: string;
+      id: string;
+      isPhoneVerified?: boolean | null;
+      location?: string | null;
+      name: string;
+      owner?: string | null;
+      phone?: string | null;
+      profileImage?: string | null;
+      pushToken?: string | null;
+      status: Status;
+      updatedAt: string;
+    } | null;
+  } | null;
+};
+
 export type DeleteProviderServiceMutationVariables = {
   condition?: ModelProviderServiceConditionInput | null;
   input: DeleteProviderServiceInput;
@@ -2442,6 +2900,10 @@ export type DeleteProviderServiceMutation = {
     price: number;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -2449,6 +2911,7 @@ export type DeleteProviderServiceMutation = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -2473,6 +2936,10 @@ export type DeleteReviewsMutation = {
     id: string;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -2480,6 +2947,7 @@ export type DeleteReviewsMutation = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -2580,6 +3048,12 @@ export type DeleteWarningMutation = {
   } | null;
 };
 
+export type EnsureUserMutationVariables = {};
+
+export type EnsureUserMutation = {
+  ensureUser?: boolean | null;
+};
+
 export type UpdateBookingMutationVariables = {
   condition?: ModelBookingConditionInput | null;
   input: UpdateBookingInput;
@@ -2600,6 +3074,10 @@ export type UpdateBookingMutation = {
     photos?: Array<string | null> | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -2607,6 +3085,7 @@ export type UpdateBookingMutation = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -2693,6 +3172,10 @@ export type UpdateNearFixProviderMutationVariables = {
 export type UpdateNearFixProviderMutation = {
   updateNearFixProvider?: {
     __typename: "NearFixProvider";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
     availabilityStatus: AvailabilityStatus;
     bio?: string | null;
     bookings?: {
@@ -2708,6 +3191,7 @@ export type UpdateNearFixProviderMutation = {
       __typename: "ModelReviewsConnection";
       nextToken?: string | null;
     } | null;
+    selfie?: string | null;
     serviceArea?: string | null;
     services?: {
       __typename: "ModelProviderServiceConnection";
@@ -2765,6 +3249,10 @@ export type UpdateNearFixUserMutation = {
     profileImage?: string | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -2772,10 +3260,27 @@ export type UpdateNearFixUserMutation = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
       verificationStatus: VerificationStatus;
+    } | null;
+    providerApplication?: {
+      __typename: "ProviderApplication";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
+      applicationStatus: ApplicationStatus;
+      businessName: string;
+      createdAt: string;
+      id: string;
+      owner?: string | null;
+      selfie?: string | null;
+      serviceArea: string;
+      updatedAt: string;
+      userId: string;
     } | null;
     pushToken?: string | null;
     reviews?: {
@@ -2830,6 +3335,45 @@ export type UpdateNotificationMutation = {
   } | null;
 };
 
+export type UpdateProviderApplicationMutationVariables = {
+  condition?: ModelProviderApplicationConditionInput | null;
+  input: UpdateProviderApplicationInput;
+};
+
+export type UpdateProviderApplicationMutation = {
+  updateProviderApplication?: {
+    __typename: "ProviderApplication";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
+    applicationStatus: ApplicationStatus;
+    businessName: string;
+    createdAt: string;
+    id: string;
+    owner?: string | null;
+    selfie?: string | null;
+    serviceArea: string;
+    updatedAt: string;
+    userId: string;
+    users?: {
+      __typename: "NearFixUser";
+      createdAt: string;
+      email: string;
+      id: string;
+      isPhoneVerified?: boolean | null;
+      location?: string | null;
+      name: string;
+      owner?: string | null;
+      phone?: string | null;
+      profileImage?: string | null;
+      pushToken?: string | null;
+      status: Status;
+      updatedAt: string;
+    } | null;
+  } | null;
+};
+
 export type UpdateProviderServiceMutationVariables = {
   condition?: ModelProviderServiceConditionInput | null;
   input: UpdateProviderServiceInput;
@@ -2847,6 +3391,10 @@ export type UpdateProviderServiceMutation = {
     price: number;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -2854,6 +3402,7 @@ export type UpdateProviderServiceMutation = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -2878,6 +3427,10 @@ export type UpdateReviewsMutation = {
     id: string;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -2885,6 +3438,7 @@ export type UpdateReviewsMutation = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -3005,6 +3559,10 @@ export type OnCreateBookingSubscription = {
     photos?: Array<string | null> | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -3012,6 +3570,7 @@ export type OnCreateBookingSubscription = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -3097,6 +3656,10 @@ export type OnCreateNearFixProviderSubscriptionVariables = {
 export type OnCreateNearFixProviderSubscription = {
   onCreateNearFixProvider?: {
     __typename: "NearFixProvider";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
     availabilityStatus: AvailabilityStatus;
     bio?: string | null;
     bookings?: {
@@ -3112,6 +3675,7 @@ export type OnCreateNearFixProviderSubscription = {
       __typename: "ModelReviewsConnection";
       nextToken?: string | null;
     } | null;
+    selfie?: string | null;
     serviceArea?: string | null;
     services?: {
       __typename: "ModelProviderServiceConnection";
@@ -3169,6 +3733,10 @@ export type OnCreateNearFixUserSubscription = {
     profileImage?: string | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -3176,10 +3744,27 @@ export type OnCreateNearFixUserSubscription = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
       verificationStatus: VerificationStatus;
+    } | null;
+    providerApplication?: {
+      __typename: "ProviderApplication";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
+      applicationStatus: ApplicationStatus;
+      businessName: string;
+      createdAt: string;
+      id: string;
+      owner?: string | null;
+      selfie?: string | null;
+      serviceArea: string;
+      updatedAt: string;
+      userId: string;
     } | null;
     pushToken?: string | null;
     reviews?: {
@@ -3234,6 +3819,45 @@ export type OnCreateNotificationSubscription = {
   } | null;
 };
 
+export type OnCreateProviderApplicationSubscriptionVariables = {
+  filter?: ModelSubscriptionProviderApplicationFilterInput | null;
+  owner?: string | null;
+};
+
+export type OnCreateProviderApplicationSubscription = {
+  onCreateProviderApplication?: {
+    __typename: "ProviderApplication";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
+    applicationStatus: ApplicationStatus;
+    businessName: string;
+    createdAt: string;
+    id: string;
+    owner?: string | null;
+    selfie?: string | null;
+    serviceArea: string;
+    updatedAt: string;
+    userId: string;
+    users?: {
+      __typename: "NearFixUser";
+      createdAt: string;
+      email: string;
+      id: string;
+      isPhoneVerified?: boolean | null;
+      location?: string | null;
+      name: string;
+      owner?: string | null;
+      phone?: string | null;
+      profileImage?: string | null;
+      pushToken?: string | null;
+      status: Status;
+      updatedAt: string;
+    } | null;
+  } | null;
+};
+
 export type OnCreateProviderServiceSubscriptionVariables = {
   filter?: ModelSubscriptionProviderServiceFilterInput | null;
   owner?: string | null;
@@ -3251,6 +3875,10 @@ export type OnCreateProviderServiceSubscription = {
     price: number;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -3258,6 +3886,7 @@ export type OnCreateProviderServiceSubscription = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -3282,6 +3911,10 @@ export type OnCreateReviewsSubscription = {
     id: string;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -3289,6 +3922,7 @@ export type OnCreateReviewsSubscription = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -3408,6 +4042,10 @@ export type OnDeleteBookingSubscription = {
     photos?: Array<string | null> | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -3415,6 +4053,7 @@ export type OnDeleteBookingSubscription = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -3500,6 +4139,10 @@ export type OnDeleteNearFixProviderSubscriptionVariables = {
 export type OnDeleteNearFixProviderSubscription = {
   onDeleteNearFixProvider?: {
     __typename: "NearFixProvider";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
     availabilityStatus: AvailabilityStatus;
     bio?: string | null;
     bookings?: {
@@ -3515,6 +4158,7 @@ export type OnDeleteNearFixProviderSubscription = {
       __typename: "ModelReviewsConnection";
       nextToken?: string | null;
     } | null;
+    selfie?: string | null;
     serviceArea?: string | null;
     services?: {
       __typename: "ModelProviderServiceConnection";
@@ -3572,6 +4216,10 @@ export type OnDeleteNearFixUserSubscription = {
     profileImage?: string | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -3579,10 +4227,27 @@ export type OnDeleteNearFixUserSubscription = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
       verificationStatus: VerificationStatus;
+    } | null;
+    providerApplication?: {
+      __typename: "ProviderApplication";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
+      applicationStatus: ApplicationStatus;
+      businessName: string;
+      createdAt: string;
+      id: string;
+      owner?: string | null;
+      selfie?: string | null;
+      serviceArea: string;
+      updatedAt: string;
+      userId: string;
     } | null;
     pushToken?: string | null;
     reviews?: {
@@ -3637,6 +4302,45 @@ export type OnDeleteNotificationSubscription = {
   } | null;
 };
 
+export type OnDeleteProviderApplicationSubscriptionVariables = {
+  filter?: ModelSubscriptionProviderApplicationFilterInput | null;
+  owner?: string | null;
+};
+
+export type OnDeleteProviderApplicationSubscription = {
+  onDeleteProviderApplication?: {
+    __typename: "ProviderApplication";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
+    applicationStatus: ApplicationStatus;
+    businessName: string;
+    createdAt: string;
+    id: string;
+    owner?: string | null;
+    selfie?: string | null;
+    serviceArea: string;
+    updatedAt: string;
+    userId: string;
+    users?: {
+      __typename: "NearFixUser";
+      createdAt: string;
+      email: string;
+      id: string;
+      isPhoneVerified?: boolean | null;
+      location?: string | null;
+      name: string;
+      owner?: string | null;
+      phone?: string | null;
+      profileImage?: string | null;
+      pushToken?: string | null;
+      status: Status;
+      updatedAt: string;
+    } | null;
+  } | null;
+};
+
 export type OnDeleteProviderServiceSubscriptionVariables = {
   filter?: ModelSubscriptionProviderServiceFilterInput | null;
   owner?: string | null;
@@ -3654,6 +4358,10 @@ export type OnDeleteProviderServiceSubscription = {
     price: number;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -3661,6 +4369,7 @@ export type OnDeleteProviderServiceSubscription = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -3685,6 +4394,10 @@ export type OnDeleteReviewsSubscription = {
     id: string;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -3692,6 +4405,7 @@ export type OnDeleteReviewsSubscription = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -3811,6 +4525,10 @@ export type OnUpdateBookingSubscription = {
     photos?: Array<string | null> | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -3818,6 +4536,7 @@ export type OnUpdateBookingSubscription = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -3903,6 +4622,10 @@ export type OnUpdateNearFixProviderSubscriptionVariables = {
 export type OnUpdateNearFixProviderSubscription = {
   onUpdateNearFixProvider?: {
     __typename: "NearFixProvider";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
     availabilityStatus: AvailabilityStatus;
     bio?: string | null;
     bookings?: {
@@ -3918,6 +4641,7 @@ export type OnUpdateNearFixProviderSubscription = {
       __typename: "ModelReviewsConnection";
       nextToken?: string | null;
     } | null;
+    selfie?: string | null;
     serviceArea?: string | null;
     services?: {
       __typename: "ModelProviderServiceConnection";
@@ -3975,6 +4699,10 @@ export type OnUpdateNearFixUserSubscription = {
     profileImage?: string | null;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -3982,10 +4710,27 @@ export type OnUpdateNearFixUserSubscription = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
       verificationStatus: VerificationStatus;
+    } | null;
+    providerApplication?: {
+      __typename: "ProviderApplication";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
+      applicationStatus: ApplicationStatus;
+      businessName: string;
+      createdAt: string;
+      id: string;
+      owner?: string | null;
+      selfie?: string | null;
+      serviceArea: string;
+      updatedAt: string;
+      userId: string;
     } | null;
     pushToken?: string | null;
     reviews?: {
@@ -4040,6 +4785,45 @@ export type OnUpdateNotificationSubscription = {
   } | null;
 };
 
+export type OnUpdateProviderApplicationSubscriptionVariables = {
+  filter?: ModelSubscriptionProviderApplicationFilterInput | null;
+  owner?: string | null;
+};
+
+export type OnUpdateProviderApplicationSubscription = {
+  onUpdateProviderApplication?: {
+    __typename: "ProviderApplication";
+    CNICBackSide?: string | null;
+    CNICFrontSide?: string | null;
+    CNICNAME?: string | null;
+    CNICNumber?: string | null;
+    applicationStatus: ApplicationStatus;
+    businessName: string;
+    createdAt: string;
+    id: string;
+    owner?: string | null;
+    selfie?: string | null;
+    serviceArea: string;
+    updatedAt: string;
+    userId: string;
+    users?: {
+      __typename: "NearFixUser";
+      createdAt: string;
+      email: string;
+      id: string;
+      isPhoneVerified?: boolean | null;
+      location?: string | null;
+      name: string;
+      owner?: string | null;
+      phone?: string | null;
+      profileImage?: string | null;
+      pushToken?: string | null;
+      status: Status;
+      updatedAt: string;
+    } | null;
+  } | null;
+};
+
 export type OnUpdateProviderServiceSubscriptionVariables = {
   filter?: ModelSubscriptionProviderServiceFilterInput | null;
   owner?: string | null;
@@ -4057,6 +4841,10 @@ export type OnUpdateProviderServiceSubscription = {
     price: number;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -4064,6 +4852,7 @@ export type OnUpdateProviderServiceSubscription = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;
@@ -4088,6 +4877,10 @@ export type OnUpdateReviewsSubscription = {
     id: string;
     provider?: {
       __typename: "NearFixProvider";
+      CNICBackSide?: string | null;
+      CNICFrontSide?: string | null;
+      CNICNAME?: string | null;
+      CNICNumber?: string | null;
       availabilityStatus: AvailabilityStatus;
       bio?: string | null;
       businessName?: string | null;
@@ -4095,6 +4888,7 @@ export type OnUpdateReviewsSubscription = {
       experience?: string | null;
       id: string;
       owner?: string | null;
+      selfie?: string | null;
       serviceArea?: string | null;
       updatedAt: string;
       userId: string;

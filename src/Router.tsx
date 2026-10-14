@@ -19,6 +19,8 @@ import Reports from "./pages/Admin/Reports";
 import CustomerManagement from "./pages/Admin/CustomerManagement";
 import ServiceManagementAdmin from "./pages/Admin/ServiceManagement";
 import AdminNotifications from "./pages/Admin/AdminNotifications";
+import SupportManagement from "./pages/Admin/SupportManagement";
+import AdminPlaceholder from "./pages/Admin/AdminPlaceholder";
 import Booking from "./pages/Common/Booking";
 import ProviderDashboard from "./pages/Provider/ProviderDashboard";
 import EarningsPage from "./pages/Provider/EarningsPage";
@@ -30,6 +32,7 @@ import AIAssistantPage from "./pages/Common/AIAssistantPage";
 import ServiceProvidersPage from "./pages/Common/ServiceProvidersPage";
 import SettingsPage from "./pages/Common/SettingsPage";
 import BecomeProviderPage from "./pages/Common/BecomeProviderPage";
+import { ProviderWorkspaceProvider } from "./pages/Provider/providerData";
 
 //eslint-disable-next-line
 const AppLayout = () => {
@@ -74,6 +77,10 @@ const router = createBrowserRouter([
             element: <UserLiveFeed />,
           },
           {
+            path: "providerProfile/:id",
+            element: <ServiceProvidersPage />,
+          },
+          {
             path: "service-providers",
             element: <ServiceProvidersPage />,
           },
@@ -96,7 +103,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/provider",
-        element: <AppLayout />,
+        element: (
+          <ProviderWorkspaceProvider>
+            <AppLayout />
+          </ProviderWorkspaceProvider>
+        ),
         children: [
           {
             index: true,
@@ -144,12 +155,64 @@ const router = createBrowserRouter([
             element: <AdminDashboard />,
           },
           {
+            path: "bookings",
+            element: <AdminPlaceholder title="Bookings" />,
+          },
+          {
+            path: "dispatch",
+            element: <AdminPlaceholder title="Live Dispatch" />,
+          },
+          {
+            path: "disputes",
+            element: <AdminPlaceholder title="Disputes & Refunds" />,
+          },
+          {
             path: "payments",
             element: <PaymentManagement />,
           },
           {
             path: "service-management",
             element: <ServiceManagementAdmin />,
+          },
+          {
+            path: "support",
+            element: <SupportManagement />,
+          },
+          {
+            path: "areas",
+            element: <AdminPlaceholder title="Service Areas" />,
+          },
+          {
+            path: "providers",
+            element: <AdminPlaceholder title="Provider Management" />,
+          },
+          {
+            path: "payouts",
+            element: <AdminPlaceholder title="Commission & Payouts" />,
+          },
+          {
+            path: "coupons",
+            element: <AdminPlaceholder title="Coupons & Promotions" />,
+          },
+          {
+            path: "reviews",
+            element: <AdminPlaceholder title="Reviews & Ratings" />,
+          },
+          {
+            path: "content",
+            element: <AdminPlaceholder title="Content & Banners" />,
+          },
+          {
+            path: "roles",
+            element: <AdminPlaceholder title="Roles & Permissions" />,
+          },
+          {
+            path: "audit-logs",
+            element: <AdminPlaceholder title="Audit Logs" />,
+          },
+          {
+            path: "settings",
+            element: <AdminPlaceholder title="Settings" />,
           },
           {
             path: "category-management",

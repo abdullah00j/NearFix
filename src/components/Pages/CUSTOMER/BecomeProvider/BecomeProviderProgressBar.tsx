@@ -3,17 +3,19 @@ import ProgressBar from "./ProgressBar";
 interface BecomeProviderProgressBarProps {
   step: number;
   totalSteps: number;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function BecomeProviderProgressBar({
   step,
   totalSteps,
+  setStep,
 }: BecomeProviderProgressBarProps) {
   const stepLabels = [
-    "Business details",
-    "CIN verification",
-    "Review",
-    "Complete",
+    { name: "Business details", step: 1 },
+    { name: "CIN verification", step: 2 },
+    { name: "Review", step: 3 },
+    { name: "Complete", step: 4 },
   ];
   return (
     <>
@@ -25,14 +27,22 @@ export default function BecomeProviderProgressBar({
             const isComplete = itemStep < step;
             return (
               <div
-                key={label}
-                className={`text-xs cursor-pointer font-medium ${
+                key={label.step}
+                className={`text-xs font-medium ${
                   isCurrent || isComplete
                     ? "text-primary"
                     : "text-[var(--muted)]"
                 }`}
               >
-                {label}
+                <button
+                  type="button"
+                  disabled={itemStep > step}
+                  aria-current={isCurrent ? "step" : undefined}
+                  onClick={() => setStep(label.step)}
+                  className="cursor-pointer disabled:cursor-not-allowed"
+                >
+                  {label.name}
+                </button>
               </div>
             );
           })}

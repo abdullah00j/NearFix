@@ -24,6 +24,10 @@ export const onCreateBooking = /* GraphQL */ `subscription OnCreateBooking(
     location
     photos
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -31,6 +35,7 @@ export const onCreateBooking = /* GraphQL */ `subscription OnCreateBooking(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -120,6 +125,10 @@ export const onCreateNearFixProvider =
   $owner: String
 ) {
   onCreateNearFixProvider(filter: $filter, owner: $owner) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
     availabilityStatus
     bio
     bookings {
@@ -135,6 +144,7 @@ export const onCreateNearFixProvider =
       nextToken
       __typename
     }
+    selfie
     serviceArea
     services {
       nextToken
@@ -193,6 +203,10 @@ export const onCreateNearFixUser =
     phone
     profileImage
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -200,10 +214,27 @@ export const onCreateNearFixUser =
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
       verificationStatus
+      __typename
+    }
+    providerApplication {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
+      applicationStatus
+      businessName
+      createdAt
+      id
+      owner
+      selfie
+      serviceArea
+      updatedAt
+      userId
       __typename
     }
     pushToken
@@ -265,6 +296,47 @@ export const onCreateNotification =
     APITypes.OnCreateNotificationSubscriptionVariables,
     APITypes.OnCreateNotificationSubscription
   >;
+export const onCreateProviderApplication =
+  /* GraphQL */ `subscription OnCreateProviderApplication(
+  $filter: ModelSubscriptionProviderApplicationFilterInput
+  $owner: String
+) {
+  onCreateProviderApplication(filter: $filter, owner: $owner) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
+    applicationStatus
+    businessName
+    createdAt
+    id
+    owner
+    selfie
+    serviceArea
+    updatedAt
+    userId
+    users {
+      createdAt
+      email
+      id
+      isPhoneVerified
+      location
+      name
+      owner
+      phone
+      profileImage
+      pushToken
+      status
+      updatedAt
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedSubscription<
+    APITypes.OnCreateProviderApplicationSubscriptionVariables,
+    APITypes.OnCreateProviderApplicationSubscription
+  >;
 export const onCreateProviderService =
   /* GraphQL */ `subscription OnCreateProviderService(
   $filter: ModelSubscriptionProviderServiceFilterInput
@@ -279,6 +351,10 @@ export const onCreateProviderService =
     owner
     price
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -286,6 +362,7 @@ export const onCreateProviderService =
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -311,6 +388,10 @@ export const onCreateReviews = /* GraphQL */ `subscription OnCreateReviews(
     createdAt
     id
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -318,6 +399,7 @@ export const onCreateReviews = /* GraphQL */ `subscription OnCreateReviews(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -439,6 +521,10 @@ export const onDeleteBooking = /* GraphQL */ `subscription OnDeleteBooking(
     location
     photos
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -446,6 +532,7 @@ export const onDeleteBooking = /* GraphQL */ `subscription OnDeleteBooking(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -535,6 +622,10 @@ export const onDeleteNearFixProvider =
   $owner: String
 ) {
   onDeleteNearFixProvider(filter: $filter, owner: $owner) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
     availabilityStatus
     bio
     bookings {
@@ -550,6 +641,7 @@ export const onDeleteNearFixProvider =
       nextToken
       __typename
     }
+    selfie
     serviceArea
     services {
       nextToken
@@ -608,6 +700,10 @@ export const onDeleteNearFixUser =
     phone
     profileImage
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -615,10 +711,27 @@ export const onDeleteNearFixUser =
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
       verificationStatus
+      __typename
+    }
+    providerApplication {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
+      applicationStatus
+      businessName
+      createdAt
+      id
+      owner
+      selfie
+      serviceArea
+      updatedAt
+      userId
       __typename
     }
     pushToken
@@ -680,6 +793,47 @@ export const onDeleteNotification =
     APITypes.OnDeleteNotificationSubscriptionVariables,
     APITypes.OnDeleteNotificationSubscription
   >;
+export const onDeleteProviderApplication =
+  /* GraphQL */ `subscription OnDeleteProviderApplication(
+  $filter: ModelSubscriptionProviderApplicationFilterInput
+  $owner: String
+) {
+  onDeleteProviderApplication(filter: $filter, owner: $owner) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
+    applicationStatus
+    businessName
+    createdAt
+    id
+    owner
+    selfie
+    serviceArea
+    updatedAt
+    userId
+    users {
+      createdAt
+      email
+      id
+      isPhoneVerified
+      location
+      name
+      owner
+      phone
+      profileImage
+      pushToken
+      status
+      updatedAt
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedSubscription<
+    APITypes.OnDeleteProviderApplicationSubscriptionVariables,
+    APITypes.OnDeleteProviderApplicationSubscription
+  >;
 export const onDeleteProviderService =
   /* GraphQL */ `subscription OnDeleteProviderService(
   $filter: ModelSubscriptionProviderServiceFilterInput
@@ -694,6 +848,10 @@ export const onDeleteProviderService =
     owner
     price
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -701,6 +859,7 @@ export const onDeleteProviderService =
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -726,6 +885,10 @@ export const onDeleteReviews = /* GraphQL */ `subscription OnDeleteReviews(
     createdAt
     id
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -733,6 +896,7 @@ export const onDeleteReviews = /* GraphQL */ `subscription OnDeleteReviews(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -854,6 +1018,10 @@ export const onUpdateBooking = /* GraphQL */ `subscription OnUpdateBooking(
     location
     photos
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -861,6 +1029,7 @@ export const onUpdateBooking = /* GraphQL */ `subscription OnUpdateBooking(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -950,6 +1119,10 @@ export const onUpdateNearFixProvider =
   $owner: String
 ) {
   onUpdateNearFixProvider(filter: $filter, owner: $owner) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
     availabilityStatus
     bio
     bookings {
@@ -965,6 +1138,7 @@ export const onUpdateNearFixProvider =
       nextToken
       __typename
     }
+    selfie
     serviceArea
     services {
       nextToken
@@ -1023,6 +1197,10 @@ export const onUpdateNearFixUser =
     phone
     profileImage
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -1030,10 +1208,27 @@ export const onUpdateNearFixUser =
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
       verificationStatus
+      __typename
+    }
+    providerApplication {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
+      applicationStatus
+      businessName
+      createdAt
+      id
+      owner
+      selfie
+      serviceArea
+      updatedAt
+      userId
       __typename
     }
     pushToken
@@ -1095,6 +1290,47 @@ export const onUpdateNotification =
     APITypes.OnUpdateNotificationSubscriptionVariables,
     APITypes.OnUpdateNotificationSubscription
   >;
+export const onUpdateProviderApplication =
+  /* GraphQL */ `subscription OnUpdateProviderApplication(
+  $filter: ModelSubscriptionProviderApplicationFilterInput
+  $owner: String
+) {
+  onUpdateProviderApplication(filter: $filter, owner: $owner) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
+    applicationStatus
+    businessName
+    createdAt
+    id
+    owner
+    selfie
+    serviceArea
+    updatedAt
+    userId
+    users {
+      createdAt
+      email
+      id
+      isPhoneVerified
+      location
+      name
+      owner
+      phone
+      profileImage
+      pushToken
+      status
+      updatedAt
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedSubscription<
+    APITypes.OnUpdateProviderApplicationSubscriptionVariables,
+    APITypes.OnUpdateProviderApplicationSubscription
+  >;
 export const onUpdateProviderService =
   /* GraphQL */ `subscription OnUpdateProviderService(
   $filter: ModelSubscriptionProviderServiceFilterInput
@@ -1109,6 +1345,10 @@ export const onUpdateProviderService =
     owner
     price
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -1116,6 +1356,7 @@ export const onUpdateProviderService =
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -1141,6 +1382,10 @@ export const onUpdateReviews = /* GraphQL */ `subscription OnUpdateReviews(
     createdAt
     id
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -1148,6 +1393,7 @@ export const onUpdateReviews = /* GraphQL */ `subscription OnUpdateReviews(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId

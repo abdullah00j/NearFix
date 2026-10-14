@@ -53,6 +53,7 @@ function App() {
             pauseOnHover
             draggable
             theme="light"
+            className="nearfix-toast-container"
           />
           <RouterProvider router={router} />
         </UserProvider>

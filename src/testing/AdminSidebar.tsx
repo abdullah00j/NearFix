@@ -48,19 +48,35 @@ const sections: Section[] = [
   {
     title: "Catalog",
     items: [
-      { label: "Service Management", href: "/admin/services", icon: Wrench },
-      { label: "Category Management", href: "/admin/categories", icon: Tags },
+      {
+        label: "Service Management",
+        href: "/admin/service-management",
+        icon: Wrench,
+      },
+      {
+        label: "Category Management",
+        href: "/admin/category-management",
+        icon: Tags,
+      },
       { label: "Service Areas", href: "/admin/areas", icon: MapPin },
     ],
   },
   {
     title: "People",
     items: [
-      { label: "Customer Management", href: "/admin/customers", icon: Users },
-      { label: "Provider Management", href: "/admin/providers", icon: HardHat },
+      {
+        label: "Customer Management",
+        href: "/admin/customer-management",
+        icon: Users,
+      },
+      {
+        label: "Provider Management",
+        href: "/admin/providers",
+        icon: HardHat,
+      },
       {
         label: "Provider Verification",
-        href: "/admin/verification",
+        href: "/admin/provider-verification",
         icon: ShieldCheck,
       },
     ],

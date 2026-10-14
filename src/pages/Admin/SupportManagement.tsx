@@ -1,3 +1,5 @@
+import AdminPlaceholder from "./AdminPlaceholder";
+
 export default function SupportManagement() {
-  return <div>SupportManagement</div>;
+  return <AdminPlaceholder title="Support Tickets" />;
 }

@@ -20,6 +20,7 @@ const Profile = () => {
     profileImage: user?.profileImage ?? "",
     email: user?.email ?? "",
   };
+  const profileImageSrc = userProfile.profileImage.trim() || "/user-icon.webp";
 
   const [language, setLanguage] = useState("English");
 
@@ -146,7 +147,15 @@ const Profile = () => {
                     text-white
                   "
                 >
-                  <img src={userProfile.profileImage} alt="Profile" />
+                  <img
+                    src={profileImageSrc}
+                    alt="Profile"
+                    className="h-full w-full object-cover"
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src = "/user-icon.webp";
+                    }}
+                  />
                 </div>
 
                 {/* Hover Overlay */}

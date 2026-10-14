@@ -97,7 +97,7 @@ const ProviderSideBar = {
     },
     {
       name: "Bookings",
-      path: "/provider/bookings",
+      path: "/bookings",
       icon: CalendarDays,
     },
     {
@@ -107,7 +107,7 @@ const ProviderSideBar = {
     },
     {
       name: "Booking History",
-      path: "/provider/booking-history",
+      path: "/booking-history",
       icon: History,
     },
     {

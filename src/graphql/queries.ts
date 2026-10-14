@@ -21,6 +21,10 @@ export const getBooking = /* GraphQL */ `query GetBooking($id: ID!) {
     location
     photos
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -28,6 +32,7 @@ export const getBooking = /* GraphQL */ `query GetBooking($id: ID!) {
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -110,6 +115,10 @@ export const getFavourite = /* GraphQL */ `query GetFavourite($id: ID!) {
 export const getNearFixProvider =
   /* GraphQL */ `query GetNearFixProvider($id: ID!) {
   getNearFixProvider(id: $id) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
     availabilityStatus
     bio
     bookings {
@@ -125,6 +134,7 @@ export const getNearFixProvider =
       nextToken
       __typename
     }
+    selfie
     serviceArea
     services {
       nextToken
@@ -179,6 +189,10 @@ export const getNearFixUser = /* GraphQL */ `query GetNearFixUser($id: ID!) {
     phone
     profileImage
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -186,10 +200,27 @@ export const getNearFixUser = /* GraphQL */ `query GetNearFixUser($id: ID!) {
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
       verificationStatus
+      __typename
+    }
+    providerApplication {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
+      applicationStatus
+      businessName
+      createdAt
+      id
+      owner
+      selfie
+      serviceArea
+      updatedAt
+      userId
       __typename
     }
     pushToken
@@ -247,6 +278,44 @@ export const getNotification = /* GraphQL */ `query GetNotification($id: ID!) {
   APITypes.GetNotificationQueryVariables,
   APITypes.GetNotificationQuery
 >;
+export const getProviderApplication =
+  /* GraphQL */ `query GetProviderApplication($id: ID!) {
+  getProviderApplication(id: $id) {
+    CNICBackSide
+    CNICFrontSide
+    CNICNAME
+    CNICNumber
+    applicationStatus
+    businessName
+    createdAt
+    id
+    owner
+    selfie
+    serviceArea
+    updatedAt
+    userId
+    users {
+      createdAt
+      email
+      id
+      isPhoneVerified
+      location
+      name
+      owner
+      phone
+      profileImage
+      pushToken
+      status
+      updatedAt
+      __typename
+    }
+    __typename
+  }
+}
+` as GeneratedQuery<
+    APITypes.GetProviderApplicationQueryVariables,
+    APITypes.GetProviderApplicationQuery
+  >;
 export const getProviderService =
   /* GraphQL */ `query GetProviderService($id: ID!) {
   getProviderService(id: $id) {
@@ -258,6 +327,10 @@ export const getProviderService =
     owner
     price
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -265,6 +338,7 @@ export const getProviderService =
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -287,6 +361,10 @@ export const getReviews = /* GraphQL */ `query GetReviews($id: ID!) {
     createdAt
     id
     provider {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -294,6 +372,7 @@ export const getReviews = /* GraphQL */ `query GetReviews($id: ID!) {
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -481,6 +560,10 @@ export const listNearFixProviders = /* GraphQL */ `query ListNearFixProviders(
 ) {
   listNearFixProviders(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
       availabilityStatus
       bio
       businessName
@@ -488,6 +571,7 @@ export const listNearFixProviders = /* GraphQL */ `query ListNearFixProviders(
       experience
       id
       owner
+      selfie
       serviceArea
       updatedAt
       userId
@@ -557,6 +641,41 @@ export const listNotifications = /* GraphQL */ `query ListNotifications(
   APITypes.ListNotificationsQueryVariables,
   APITypes.ListNotificationsQuery
 >;
+export const listProviderApplications =
+  /* GraphQL */ `query ListProviderApplications(
+  $filter: ModelProviderApplicationFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listProviderApplications(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      CNICBackSide
+      CNICFrontSide
+      CNICNAME
+      CNICNumber
+      applicationStatus
+      businessName
+      createdAt
+      id
+      owner
+      selfie
+      serviceArea
+      updatedAt
+      userId
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}
+` as GeneratedQuery<
+    APITypes.ListProviderApplicationsQueryVariables,
+    APITypes.ListProviderApplicationsQuery
+  >;
 export const listProviderServices = /* GraphQL */ `query ListProviderServices(
   $filter: ModelProviderServiceFilterInput
   $limit: Int

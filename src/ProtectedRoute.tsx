@@ -13,8 +13,10 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
-  const { role, setRole } = useCurrentUser();
+  const { role, setRole, currentUser } = useCurrentUser();
   const location = useLocation();
+
+  console.log(currentUser);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -24,7 +26,6 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
           setIsAuthenticated(false);
           return;
         }
-
         const groups = tokens?.idToken?.payload["cognito:groups"];
         const validGroups: Role[] = Array.isArray(groups)
           ? groups.filter(
@@ -34,19 +35,20 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
                 group === "ADMIN",
             )
           : [];
-        setRole(validGroups);
-        console.log(validGroups);
-        console.log("User role is:", validGroups);
+
+        if (currentUser) {
+          const activeRole = currentUser.activeRole;
+          setRole(activeRole ? [activeRole] : validGroups);
+        }
         setIsAuthenticated(!!tokens);
-      } catch (error) {
-        console.log("No active session", error);
+      } catch {
         setIsAuthenticated(false);
       }
     };
 
     checkSession();
-  }, [setRole]);
-
+  }, [setRole, currentUser]);
+  console.log(role);
   if (isAuthenticated === null || (isAuthenticated && role === null)) {
     return (
       <div className="h-screen flex items-center justify-center">

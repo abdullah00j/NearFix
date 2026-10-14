@@ -1,4 +1,5 @@
 import { MapPin, ShieldCheck, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface ProviderCardProps {
   id: string;
@@ -82,12 +83,35 @@ export default function ProviderCard({
               ${startingPrice}
             </span>
           </p>
-          {verified && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-panel-soft px-2.5 py-1 text-xs font-medium text-[var(--text)]">
-              <ShieldCheck size={14} className="text-primary" />
-              Verified
-            </span>
-          )}
+          <div className="flex items-center gap-3">
+            {verified && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-panel-soft px-2.5 py-1 text-xs font-medium text-[var(--text)]">
+                <ShieldCheck size={14} className="text-primary" />
+                Verified
+              </span>
+            )}
+            <Link
+              to={`/provider-profile/${encodeURIComponent(id)}`}
+              state={{
+                provider: {
+                  id,
+                  name,
+                  category: category ?? "Home services",
+                  description,
+                  location,
+                  rating,
+                  reviewCount,
+                  startingPrice,
+                  initials,
+                  available: Boolean(available),
+                  verified: Boolean(verified),
+                },
+              }}
+              className="rounded-lg bg-primary px-3 py-2 text-xs font-medium text-white transition hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              View profile
+            </Link>
+          </div>
         </div>
       </article>
     </>

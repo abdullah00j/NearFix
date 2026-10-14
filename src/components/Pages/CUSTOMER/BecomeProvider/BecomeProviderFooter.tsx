@@ -4,6 +4,7 @@ type BecomeProviderFooterProps = {
   step: number;
   totalSteps: number;
   saved: boolean;
+  loading: boolean;
   onPrevious: () => void;
   onNext: () => void;
   onReview: () => void;
@@ -14,6 +15,7 @@ export default function BecomeProviderFooter({
   step,
   totalSteps,
   saved,
+  loading,
   onPrevious,
   onNext,
   onReview,
@@ -26,7 +28,7 @@ export default function BecomeProviderFooter({
       <button
         type="button"
         onClick={isComplete ? onReview : onPrevious}
-        disabled={!isComplete && step <= 1}
+        disabled={loading || (!isComplete && step <= 1)}
         className="inline-flex items-center justify-center gap-2 self-start rounded-xl border border-line bg-[var(--panel)] px-4 py-2.5 text-sm font-medium text-[var(--muted)] transition hover:bg-panel-soft hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-40"
       >
         <ArrowLeft size={16} />
@@ -37,20 +39,23 @@ export default function BecomeProviderFooter({
         <p className="text-center text-xs text-[var(--muted)] sm:text-right">
           {isComplete
             ? saved
-              ? "Draft saved on this device."
-              : "Application draft is not saved yet."
-            : `Step ${step} of ${totalSteps}`}
+              ? "Application submitted."
+              : "Application was not submitted."
+            : `Step ${step} of ${totalSteps - 1}`}
         </p>
         {!isComplete && (
           <button
             type="button"
             onClick={step === totalSteps - 1 ? onSave : onNext}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-white transition hover:bg-primary-dark"
+            disabled={loading || (step === totalSteps - 1 && saved)}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {step === totalSteps - 1 ? (
+            {loading ? (
+              "Submitting..."
+            ) : step === totalSteps - 1 ? (
               <>
                 {saved ? <Check size={16} /> : <BriefcaseBusiness size={16} />}
-                {saved ? "Draft saved locally" : "Submit application"}
+                {saved ? "Application submitted" : "Submit application"}
               </>
             ) : (
               <>

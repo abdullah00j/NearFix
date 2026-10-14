@@ -113,6 +113,7 @@ export default function CustomerManagement() {
               "Contact",
               "Location",
               "Joined",
+              "Active Role",
               "Status",
               "",
             ]}
@@ -139,6 +140,7 @@ export default function CustomerManagement() {
                 <td className="px-4 py-3 text-[var(--muted)]">
                   {formatDate(customer.createdAt)}
                 </td>
+                <td className="px-4 py-3">{customer.activeRole || "-"}</td>
                 <td className="px-4 py-3">
                   <StatusBadge status={customer.status} />
                 </td>
