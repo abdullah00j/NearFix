@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import SettingHeader from "../../components/Pages/COMMONPAGES/Setting/SettingHeader";
+import { Monitor } from "lucide-react";
+import CommonPageHeader from "@/components/Pages/COMMONPAGES/Shared/CommonPageHeader";
 import SettingthemeAppearance from "../../components/Pages/COMMONPAGES/Setting/SettingthemeAppearance";
 import SettingNotificationAppearance from "../../components/Pages/COMMONPAGES/Setting/SettingNotificationAppearance";
 import SettingLanguagePrefrences from "../../components/Pages/COMMONPAGES/Setting/SettingLanguagePrefrences";
@@ -81,7 +82,12 @@ export default function SettingsPage() {
 
   return (
     <section className="mx-auto max-w-[1000px] space-y-7 px-1 py-2 text-[var(--text)] md:px-2">
-      <SettingHeader />
+      <CommonPageHeader
+        eyebrow="Personalize your account"
+        icon={<Monitor size={16} />}
+        title="Settings"
+        description="Choose how NearFix looks and which updates you want to receive."
+      />
 
       <SettingthemeAppearance theme={theme} setTheme={setTheme} />
 

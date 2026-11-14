@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import { Sparkles } from "lucide-react";
 
 import InputForAI from "../../components/Pages/COMMONPAGES/AIAssistant/InputForAI";
-import AIHeader from "../../components/Pages/COMMONPAGES/AIAssistant/AIHeader";
+import CommonPageHeader from "@/components/Pages/COMMONPAGES/Shared/CommonPageHeader";
 import AIChatBox from "../../components/Pages/COMMONPAGES/AIAssistant/AIChatBox";
 
 type AttachedImage = {
@@ -30,7 +31,12 @@ export default function AIAssistantPage() {
 
   return (
     <section className="mx-auto min-h-full  flex  max-w-[1000px] flex-col text-[var(--text)]">
-      <AIHeader />
+      <CommonPageHeader
+        alignment="center"
+        icon={<Sparkles size={23} />}
+        title="NearFix AI Assistant"
+        description="Describe a home repair or upload a photo to get help preparing your service request."
+      />
 
       <AIChatBox
         submittedPrompts={submittedPrompts}

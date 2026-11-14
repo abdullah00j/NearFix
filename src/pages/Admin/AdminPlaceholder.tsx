@@ -1,9 +1,9 @@
-import { PageHeader } from "./AdminUI";
+import AdminPageHeader from "@/components/Pages/ADMIN/Shared/AdminPageHeader";
 
 export default function AdminPlaceholder({ title }: { title: string }) {
   return (
     <div className="space-y-6">
-      <PageHeader
+      <AdminPageHeader
         title={title}
         description={`Manage ${title.toLowerCase()} across NearFix.`}
       />

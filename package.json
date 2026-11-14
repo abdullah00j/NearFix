@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "prepare": "husky",
-    "sandbox": "npx ampx sandbox --identifier nearfixnew",
+    "sandbox": "npx ampx sandbox --profile nearfix --identifier nearfix-new",
     "generate:graphql": "npx ampx generate graphql-client-code --stack amplify-nearfix-nearfixnew-sandbox-fd1429edea  --format graphql-codegen  --statement-target typescript  --out ./src/graphql"
   },
   "dependencies": {
@@ -38,6 +38,7 @@
     "@aws-amplify/backend": "^1.25.1",
     "@aws-amplify/backend-cli": "^1.10.0",
     "@eslint/js": "^10.0.1",
+    "@tanstack/react-query-devtools": "^5.105.0",
     "@types/aws-lambda": "^8.10.164",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",

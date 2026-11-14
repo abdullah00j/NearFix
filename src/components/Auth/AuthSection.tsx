@@ -1,6 +1,6 @@
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import Button from "../common/Button";
-import { signInWithRedirect } from "aws-amplify/auth";
+import { signInWithGoogle } from "@/lib/userServices";
 
 type AuthSectionProps = {
   setShowPhonePopup: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,9 +9,7 @@ type AuthSectionProps = {
 const AuthSection = ({ setShowPhonePopup }: AuthSectionProps) => {
   const handleGoogleLogin = async () => {
     try {
-      await signInWithRedirect({
-        provider: "Google",
-      });
+      await signInWithGoogle();
     } catch (error) {
       console.error("Google login failed:", error);
     }

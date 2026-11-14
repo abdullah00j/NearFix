@@ -298,7 +298,9 @@ const schema = a
         description: a.string(),
         isActive: a.boolean().default(true),
         category: a.string().required(),
+        pricingType: a.enum(["PER_TASK", "PER_HOUR", "PER_PRODUCT", "PER_DAY"]),
         provider: a.belongsTo("NearFixProvider", "providerId"),
+        ProductImages: a.string().array(),
       })
       .authorization((allow) => [
         allow.owner(),

@@ -6,6 +6,7 @@ import { useCurrentUser } from "./context/UserContext";
 import AdminSidebar from "./testing/AdminSidebar";
 import { flags } from "./testing/flags";
 import { useState } from "react";
+import LiveCustomerToast from "./components/common/LiveCustomerToast";
 
 function Layout({ children }: { children: React.ReactNode }) {
   const { isSidebarOpen } = useNavbarContext();
@@ -46,6 +47,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           <AppWrapper>{children}</AppWrapper>
         </main>
       </div>
+      <LiveCustomerToast />
     </div>
   );
 }

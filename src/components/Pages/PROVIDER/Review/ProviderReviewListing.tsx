@@ -1,5 +1,5 @@
+import { formatProviderDate } from "@/lib/utilFunctions";
 import { Search, Star } from "lucide-react";
-import { formatProviderDate } from "@/pages/Provider/providerData";
 
 type ProviderReviewRecord = {
   id: string;

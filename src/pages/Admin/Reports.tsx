@@ -1,52 +1,17 @@
 import {
   DataTable,
   ErrorState,
-  LoadingState,
-  PageHeader,
   Panel,
   RefreshButton,
   StatCard,
   StatusBadge,
-} from "./AdminUI";
-import {
-  adminClient,
-  nonNullRecords,
-  throwModelErrors,
-  useAdminData,
-} from "./adminData";
-
-const loadReports = async () => {
-  const [usersResult, providersResult, bookingsResult, categoriesResult] =
-    await Promise.all([
-      adminClient.models.NearFixUser.list({ limit: 200 }),
-      adminClient.models.NearFixProvider.list({ limit: 200 }),
-      adminClient.models.Booking.list({ limit: 200 }),
-      adminClient.models.Category.list({ limit: 200 }),
-    ]);
-  throwModelErrors(usersResult.errors, "Unable to load customer report data.");
-  throwModelErrors(
-    providersResult.errors,
-    "Unable to load provider report data.",
-  );
-  throwModelErrors(
-    bookingsResult.errors,
-    "Unable to load booking report data.",
-  );
-  throwModelErrors(
-    categoriesResult.errors,
-    "Unable to load category report data.",
-  );
-
-  return {
-    users: nonNullRecords(usersResult.data),
-    providers: nonNullRecords(providersResult.data),
-    bookings: nonNullRecords(bookingsResult.data),
-    categories: nonNullRecords(categoriesResult.data),
-  };
-};
+} from "@/components/Pages/ADMIN/Shared";
+import AdminPageHeader from "@/components/Pages/ADMIN/Shared/AdminPageHeader";
+import AdminOverviewSkeleton from "./AdminSkeleton/AdminOverviewSkeleton";
+import { useAdmin } from "@/context/AdminContext";
 
 export default function Reports() {
-  const { data, loading, error, refresh } = useAdminData(loadReports);
+  const { data, loading, error, refresh } = useAdmin();
   const bookings = data?.bookings ?? [];
   const completed = bookings.filter(
     (booking) => booking.status === "COMPLETED",
@@ -76,7 +41,7 @@ export default function Reports() {
 
   return (
     <section className="mx-auto max-w-[1280px] space-y-6 px-1 py-2 text-[var(--text)] md:px-2">
-      <PageHeader
+      <AdminPageHeader
         title="Reports"
         description="Current platform totals and booking status breakdown from available NearFix records."
         action={
@@ -86,7 +51,7 @@ export default function Reports() {
 
       {error && <ErrorState message={error} />}
       {loading && !data ? (
-        <LoadingState />
+        <AdminOverviewSkeleton />
       ) : (
         <>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">

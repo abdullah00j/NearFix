@@ -8,7 +8,7 @@ import SupportPage from "./pages/Common/SupportPage";
 import NotificationsPage from "./pages/Common/NotificationsPage";
 import ChatPage from "./pages/Common/ChatPage";
 import ProtectedRoute from "./ProtectedRoute";
-import UserLiveFeed from "./pages/User/UserLiveFeed";
+import UserLiveFeed from "./pages/Customer/UserLiveFeed";
 import ProviderLiveFeed from "./pages/Provider/ProviderLiveFeed";
 import ServiceManagement from "./pages/Provider/ServiceManagement";
 import PaymentManagement from "./pages/Admin/PaymentManagement";
@@ -21,6 +21,8 @@ import ServiceManagementAdmin from "./pages/Admin/ServiceManagement";
 import AdminNotifications from "./pages/Admin/AdminNotifications";
 import SupportManagement from "./pages/Admin/SupportManagement";
 import AdminPlaceholder from "./pages/Admin/AdminPlaceholder";
+import ProviderManagement from "./pages/Admin/ProviderManagement";
+import AdminSettings from "./pages/Admin/AdminSettings";
 import Booking from "./pages/Common/Booking";
 import ProviderDashboard from "./pages/Provider/ProviderDashboard";
 import EarningsPage from "./pages/Provider/EarningsPage";
@@ -29,10 +31,10 @@ import RegistrationPage from "./pages/Provider/RegistrationPage";
 import BookingHistoryPage from "./pages/Common/BookingHistoryPage";
 import FavouritePage from "./pages/Common/FavouritePage";
 import AIAssistantPage from "./pages/Common/AIAssistantPage";
-import ServiceProvidersPage from "./pages/Common/ServiceProvidersPage";
+import ServiceProvidersPage from "./pages/Customer/ServiceProvidersPage";
+import ProviderProfilePage from "./pages/Common/ProviderProfilePage";
 import SettingsPage from "./pages/Common/SettingsPage";
-import BecomeProviderPage from "./pages/Common/BecomeProviderPage";
-import { ProviderWorkspaceProvider } from "./pages/Provider/providerData";
+import BecomeProviderPage from "./pages/Customer/BecomeProviderPage";
 
 //eslint-disable-next-line
 const AppLayout = () => {
@@ -77,8 +79,12 @@ const router = createBrowserRouter([
             element: <UserLiveFeed />,
           },
           {
+            path: "provider-profile/:id",
+            element: <ProviderProfilePage />,
+          },
+          {
             path: "providerProfile/:id",
-            element: <ServiceProvidersPage />,
+            element: <ProviderProfilePage />,
           },
           {
             path: "service-providers",
@@ -103,11 +109,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/provider",
-        element: (
-          <ProviderWorkspaceProvider>
-            <AppLayout />
-          </ProviderWorkspaceProvider>
-        ),
+        element: <AppLayout />,
         children: [
           {
             index: true,
@@ -184,7 +186,7 @@ const router = createBrowserRouter([
           },
           {
             path: "providers",
-            element: <AdminPlaceholder title="Provider Management" />,
+            element: <ProviderManagement />,
           },
           {
             path: "payouts",
@@ -212,7 +214,7 @@ const router = createBrowserRouter([
           },
           {
             path: "settings",
-            element: <AdminPlaceholder title="Settings" />,
+            element: <AdminSettings />,
           },
           {
             path: "category-management",

@@ -3,63 +3,27 @@ import { ArrowLeft, Search } from "lucide-react";
 import {
   DataTable,
   ErrorState,
-  LoadingState,
-  PageHeader,
   Panel,
   RefreshButton,
   StatusBadge,
-} from "./AdminUI";
+} from "@/components/Pages/ADMIN/Shared";
+import AdminPageHeader from "@/components/Pages/ADMIN/Shared/AdminPageHeader";
+import AdminTableSkeleton from "./AdminSkeleton/AdminTableSkeleton";
 import { formatDate } from "./adminFormat";
-import {
-  adminClient,
-  nonNullRecords,
-  throwModelErrors,
-  useAdminData,
-} from "./adminData";
 import ProviderApplicationDetails from "./ProviderApplicationDetails";
+import { useAdmin } from "@/context/AdminContext";
+import { useReviewProviderApplication } from "@/data/ADMIN/AdminMutation";
+import { useLiveAdminProviderApplications } from "@/data/ADMIN/AdminQueries";
 
-const loadProviders = async () => {
-  const { data, errors } = await adminClient.models.ProviderApplication.list({
-    limit: 200,
-    authMode: "userPool",
-    selectionSet: [
-      "id",
-      "userId",
-      "businessName",
-      "serviceArea",
-      "selfie",
-      "CNICNumber",
-      "CNICNAME",
-      "CNICFrontSide",
-      "CNICBackSide",
-      "applicationStatus",
-      "createdAt",
-      "updatedAt",
-      "owner",
-
-      // Related NearFixUser fields
-      "users.id",
-      "users.name",
-      "users.email",
-      "users.profileImage",
-    ] as const,
-  });
-
-  throwModelErrors(errors, "Unable to load provider applications.");
-
-  return {
-    providers: nonNullRecords(data).filter(
-      (provider) =>
-        provider.applicationStatus === "PENDING" ||
-        provider.applicationStatus === "REJECTED",
-    ),
-  };
-};
-
-type VerificationStatus = "PENDING" | "APPROVED" | "REJECTED";
+type VerificationStatus = "APPROVED" | "REJECTED";
 
 export default function ProviderVerification() {
-  const { data, loading, error, refresh } = useAdminData(loadProviders);
+  const { data, loading, error, refresh } = useAdmin();
+  const liveApplicationsQuery = useLiveAdminProviderApplications(
+    data?.users ?? [],
+  );
+  const reviewApplicationMutation = useReviewProviderApplication();
+
   const [search, setSearch] = useState("");
   const [actionError, setActionError] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
@@ -67,22 +31,19 @@ export default function ProviderVerification() {
     null,
   );
 
-  const selectedProvider = data?.providers.find(
+  const providerApplications = useMemo(
+    () => liveApplicationsQuery.data ?? data?.providerApplications ?? [],
+    [liveApplicationsQuery.data, data?.providerApplications],
+  );
+
+  const selectedProvider = providerApplications.find(
     (provider) => provider.id === selectedProviderId,
   );
 
-  // const userById = useMemo(
-  //   () => new Map((data?.providers ?? []).map((user) => [user.id, user])),
-  //   [data?.providers],
-  // );
-
-  // console.log(userById);
-
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
-    return (data?.providers ?? [])
+    return providerApplications
       .filter((provider) => {
-        // const user = userById.get(provider.userId);
         return [
           provider.businessName ?? "",
           provider.serviceArea ?? "",
@@ -100,7 +61,7 @@ export default function ProviderVerification() {
           Number(a.applicationStatus === "PENDING");
         return pendingOrder || b.createdAt.localeCompare(a.createdAt);
       });
-  }, [data?.providers, search]);
+  }, [providerApplications, search]);
 
   const setVerification = async (
     id: string,
@@ -109,14 +70,10 @@ export default function ProviderVerification() {
     setSavingId(id);
     setActionError(null);
     try {
-      const result = await adminClient.mutations.reviewProviderApplication({
+      await reviewApplicationMutation.mutateAsync({
         applicationId: id,
         applicationStatus: verificationStatus,
       });
-      throwModelErrors(result.errors, "Unable to update provider application.");
-      if (!result.data)
-        throw new Error("The provider application status was not updated.");
-      await refresh();
     } catch (mutationError) {
       setActionError(
         mutationError instanceof Error
@@ -130,7 +87,7 @@ export default function ProviderVerification() {
 
   return (
     <section className="mx-auto max-w-[1280px] space-y-6 px-1 py-2 text-[var(--text)] md:px-2">
-      <PageHeader
+      <AdminPageHeader
         title="Provider verification"
         description="Review provider profiles and record approval or rejection decisions."
         action={
@@ -148,10 +105,7 @@ export default function ProviderVerification() {
             <ArrowLeft size={16} />
             Back to applications
           </button>
-          <ProviderApplicationDetails
-            application={selectedProvider}
-            // getDocumentUrl={getDocumentUrl}
-          />
+          <ProviderApplicationDetails application={selectedProvider} />
         </div>
       ) : (
         <>
@@ -162,7 +116,7 @@ export default function ProviderVerification() {
           )}
 
           <Panel
-            title={`Provider applications (${data?.providers.length ?? 0})`}
+            title={`Provider applications (${providerApplications.length})`}
             action={
               <label className="flex items-center gap-2 rounded-xl border border-[var(--line)] px-3 py-2">
                 <Search size={15} className="text-[var(--muted)]" />
@@ -177,7 +131,7 @@ export default function ProviderVerification() {
             }
           >
             {loading && !data ? (
-              <LoadingState />
+              <AdminTableSkeleton columns={6} />
             ) : (
               <DataTable
                 headers={[
@@ -192,7 +146,6 @@ export default function ProviderVerification() {
                 emptyMessage="No provider applications match your search."
               >
                 {filtered.map((provider) => {
-                  // const user = userById.get(provider.userId);
                   const saving = savingId === provider.id;
                   return (
                     <tr key={provider.id}>

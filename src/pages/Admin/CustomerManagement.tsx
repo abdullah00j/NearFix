@@ -3,35 +3,22 @@ import { Search } from "lucide-react";
 import {
   DataTable,
   ErrorState,
-  LoadingState,
-  PageHeader,
   Panel,
   RefreshButton,
   StatusBadge,
-} from "./AdminUI";
+} from "@/components/Pages/ADMIN/Shared";
+import AdminPageHeader from "@/components/Pages/ADMIN/Shared/AdminPageHeader";
+import AdminTableSkeleton from "./AdminSkeleton/AdminTableSkeleton";
 import { formatDate } from "./adminFormat";
-import {
-  adminClient,
-  nonNullRecords,
-  throwModelErrors,
-  useAdminData,
-} from "./adminData";
-
-const loadCustomers = async () => {
-  const result = await adminClient.models.NearFixUser.list({ limit: 200 });
-  throwModelErrors(result.errors, "Unable to load customers.");
-  return nonNullRecords(result.data);
-};
+import { useAdmin } from "@/context/AdminContext";
+import { useUpdateAdminUserStatus } from "@/data/ADMIN/AdminMutation";
 
 type UserStatus = "ACTIVE" | "WARNED" | "SUSPENDED";
 
 export default function CustomerManagement() {
-  const {
-    data: customers,
-    loading,
-    error,
-    refresh,
-  } = useAdminData(loadCustomers);
+  const { data, loading, error, refresh } = useAdmin();
+  const updateUserStatus = useUpdateAdminUserStatus();
+  const customers = data?.users ?? null;
   const [search, setSearch] = useState("");
   const [actionError, setActionError] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
@@ -55,13 +42,10 @@ export default function CustomerManagement() {
     setSavingId(id);
     setActionError(null);
     try {
-      const result = await adminClient.models.NearFixUser.update({
+      await updateUserStatus.mutateAsync({
         id,
         status,
       });
-      throwModelErrors(result.errors, "Unable to update this customer.");
-      if (!result.data) throw new Error("The customer status was not updated.");
-      await refresh();
     } catch (mutationError) {
       setActionError(
         mutationError instanceof Error
@@ -75,7 +59,7 @@ export default function CustomerManagement() {
 
   return (
     <section className="mx-auto max-w-[1280px] space-y-6 px-1 py-2 text-[var(--text)] md:px-2">
-      <PageHeader
+      <AdminPageHeader
         title="Customer management"
         description="Review customer profiles and manage account status."
         action={
@@ -105,7 +89,7 @@ export default function CustomerManagement() {
         }
       >
         {loading && !customers ? (
-          <LoadingState />
+          <AdminTableSkeleton columns={7} />
         ) : (
           <DataTable
             headers={[

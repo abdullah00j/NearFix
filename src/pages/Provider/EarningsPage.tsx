@@ -1,8 +1,9 @@
-import { useProviderWorkspace } from "./providerData";
 import ProviderDashboardHeader from "@/components/Pages/PROVIDER/Earnings/ProviderEarningHeader";
 import ProviderDashboardStatsCards from "@/components/Pages/PROVIDER/Earnings/ProviderEarningStatsCards";
 import ProviderDashboardEarningChart from "@/components/Pages/PROVIDER/Earnings/ProviderEarningChart";
 import ProviderDashboardRecentBooking from "@/components/Pages/PROVIDER/Earnings/ProviderEarningRecentBooking";
+import { useProvider } from "@/context/ProviderContext";
+import ProviderPageSkeleton from "./ProviderSkeleton/ProviderPageSkeleton";
 
 const bookingDate = (booking: {
   completedAt?: string | null;
@@ -11,7 +12,9 @@ const bookingDate = (booking: {
 }) => booking.completedAt ?? booking.updatedAt ?? booking.createdAt;
 
 export default function EarningsPage() {
-  const { data, loading, error, refresh } = useProviderWorkspace();
+  const { data, loading, error, refresh } = useProvider();
+  if (loading && !data) return <ProviderPageSkeleton />;
+
   const services = data?.services ?? [];
   const completedBookings = (data?.bookings ?? []).filter(
     (booking) => booking.status === "COMPLETED",

@@ -1,4 +1,3 @@
-import { getUrl } from "aws-amplify/storage";
 import {
   CalendarDays,
   CheckCircle2,
@@ -13,31 +12,10 @@ import {
   ExternalLink,
   Hash,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useAdminDocumentUrl } from "@/data/ADMIN/AdminQueries";
+import type { ProviderApplication } from "@/data/ADMIN/AdminTypes";
 
-type Applicant = {
-  id: string;
-  name: string | null;
-  email: string | null;
-  profileImage: string | null;
-};
-
-export type ProviderApplication = {
-  id: string;
-  userId: string;
-  businessName: string;
-  serviceArea: string;
-  selfie: string | null;
-  CNICNumber: string | null;
-  CNICNAME: string | null;
-  CNICFrontSide: string | null;
-  CNICBackSide: string | null;
-  applicationStatus: string;
-  createdAt: string;
-  updatedAt: string;
-  owner: string | null;
-  users: Applicant | null;
-};
+export type { ProviderApplication } from "@/data/ADMIN/AdminTypes";
 
 type Props = {
   application: ProviderApplication;
@@ -104,47 +82,11 @@ const Detail = ({ label, value }: { label: string; value?: string | null }) => (
 const DocumentCard = ({
   title,
   path,
-  getImage,
 }: {
   title: string;
   path?: string | null;
-  getImage: (path: string) => Promise<string>;
 }) => {
-  const [document, setDocument] = useState<{
-    path: string;
-    url?: string;
-    error?: string;
-  } | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    // .then(successCallback, errorCallback)
-
-    if (path) {
-      // 1. Success callback
-      void getImage(path).then(
-        (documentUrl) => {
-          if (!cancelled) setDocument({ path, url: documentUrl });
-        },
-        // 2. Error callback
-        (documentError: unknown) => {
-          if (!cancelled) {
-            setDocument({
-              path,
-              error:
-                documentError instanceof Error
-                  ? documentError.message
-                  : "Unable to load document.",
-            });
-          }
-        },
-      );
-    }
-
-    return () => {
-      cancelled = true;
-    };
-  }, [getImage, path]);
+  const documentQuery = useAdminDocumentUrl(path);
 
   if (!path) {
     return (
@@ -157,32 +99,35 @@ const DocumentCard = ({
     );
   }
 
-  const documentForPath = document?.path === path ? document : null;
-
-  if (documentForPath?.error) {
+  if (documentQuery.error) {
     return (
       <div className="rounded-xl border border-rose-500/30 bg-rose-500/5 p-4">
         <p className="text-sm font-medium text-rose-700 dark:text-rose-300">
           {title}
         </p>
         <p className="mt-2 text-sm text-rose-700 dark:text-rose-300">
-          {documentForPath.error}
+          {documentQuery.error instanceof Error
+            ? documentQuery.error.message
+            : "Unable to load document."}
         </p>
       </div>
     );
   }
 
-  if (!documentForPath?.url) {
+  if (!documentQuery.data) {
     return (
       <div className="rounded-xl border border-[var(--line)] p-4">
         <p className="text-sm font-medium text-[var(--text)]">{title}</p>
-        <p className="mt-2 text-sm text-[var(--muted)]">Loading document...</p>
+        <p className="mt-2 text-sm text-[var(--muted)]">
+          {documentQuery.isLoading
+            ? "Loading document..."
+            : "Unable to load document."}
+        </p>
       </div>
     );
   }
 
-  const url = documentForPath.url;
-  console.log(url);
+  const url = documentQuery.data;
   return (
     <div className="overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--panel)]">
       <a href={url} target="_blank" rel="noreferrer" className="group block">
@@ -210,22 +155,11 @@ const DocumentCard = ({
   );
 };
 
-const getImage = async (path: string): Promise<string> => {
-  const { url } = await getUrl({
-    path,
-    options: {
-      expiresIn: 60,
-    },
-  });
-
-  return url.toString();
-};
 export default function ProviderApplicationDetails({
   application,
   onApprove,
   onReject,
 }: Props) {
-  console.log(application);
   const applicant = application.users;
   const canReview = application.applicationStatus.toUpperCase() === "PENDING";
 
@@ -367,20 +301,14 @@ export default function ProviderApplicationDetails({
         </h3>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <DocumentCard
-            title="Applicant selfie"
-            path={application.selfie}
-            getImage={getImage}
-          />
+          <DocumentCard title="Applicant selfie" path={application.selfie} />
           <DocumentCard
             title="CNIC front side"
             path={application.CNICFrontSide}
-            getImage={getImage}
           />
           <DocumentCard
             title="CNIC back side"
             path={application.CNICBackSide}
-            getImage={getImage}
           />
         </div>
       </section>

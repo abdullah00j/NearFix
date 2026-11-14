@@ -3,6 +3,7 @@ import ProviderCard from "../../../common/ProviderCard";
 
 type Provider = {
   id: string;
+  serviceId: string;
   name: string;
   category: string;
   description: string;
@@ -11,7 +12,6 @@ type Provider = {
   reviewCount: number;
   startingPrice: number;
   initials: string;
-  available: boolean;
   verified: boolean;
 };
 
@@ -34,6 +34,7 @@ export default function ServiceProviderListing({
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {filteredProviders.map((provider) => (
             <ProviderCard
+              key={provider.serviceId}
               id={provider.id}
               name={provider.name}
               category={provider.category}
@@ -41,7 +42,6 @@ export default function ServiceProviderListing({
               location={provider.location}
               rating={provider.rating}
               reviewCount={provider.reviewCount}
-              available={provider.available}
               startingPrice={provider.startingPrice}
               verified={provider.verified}
               initials={provider.initials}

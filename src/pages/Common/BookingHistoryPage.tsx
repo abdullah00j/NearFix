@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { History } from "lucide-react";
-import BookingHistory from "../../components/Pages/COMMONPAGES/BookingHistory.tsx/BookingHistory";
-import BookingHistoryPills from "../../components/Pages/COMMONPAGES/BookingHistory.tsx/BookingHistoryPills";
-import BookingHistoryNotifcationListing from "../../components/Pages/COMMONPAGES/BookingHistory.tsx/BookingHistoryNotifcationListing";
+import CommonPageHeader from "@/components/Pages/COMMONPAGES/Shared/CommonPageHeader";
+import BookingHistoryPills from "../../components/Pages/COMMONPAGES/BookingHistory/BookingHistoryPills";
+import BookingHistoryNotifcationListing from "../../components/Pages/COMMONPAGES/BookingHistory/BookingHistoryNotifcationListing";
 
 type HistoryStatus = "COMPLETED" | "CANCELED";
 type HistoryFilter = "ALL" | HistoryStatus;
@@ -80,8 +80,18 @@ export default function BookingHistoryPage() {
   };
 
   return (
-    <section className="mx-auto max-w-[1080px] px-1 py-6 text-[var(--text)] md:px-2 md:py-8">
-      <BookingHistory />
+    <section className="mx-auto max-w-[1280px] space-y-6 px-1 py-2 text-[var(--text)] md:px-2">
+      <CommonPageHeader
+        eyebrow="Your activity"
+        icon={<History size={16} />}
+        title="Booking history"
+        description="A record of your completed and canceled service bookings."
+        action={
+          <span className="self-start rounded-xl border border-line bg-panel-soft px-3 py-2 text-sm text-[var(--muted)] sm:self-auto">
+            {bookingActivities.length} activities
+          </span>
+        }
+      />
 
       <BookingHistoryPills
         activeFilter={activeFilter}

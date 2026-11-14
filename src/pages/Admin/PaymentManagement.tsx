@@ -3,41 +3,15 @@ import { Search } from "lucide-react";
 import {
   DataTable,
   ErrorState,
-  LoadingState,
-  PageHeader,
   Panel,
   RefreshButton,
   StatCard,
   StatusBadge,
-} from "./AdminUI";
+} from "@/components/Pages/ADMIN/Shared";
+import AdminPageHeader from "@/components/Pages/ADMIN/Shared/AdminPageHeader";
+import AdminOverviewSkeleton from "./AdminSkeleton/AdminOverviewSkeleton";
 import { formatDate } from "./adminFormat";
-import {
-  adminClient,
-  nonNullRecords,
-  throwModelErrors,
-  useAdminData,
-} from "./adminData";
-
-const loadPaymentOverview = async () => {
-  const [bookingsResult, servicesResult, usersResult, providersResult] =
-    await Promise.all([
-      adminClient.models.Booking.list({ limit: 200 }),
-      adminClient.models.ProviderService.list({ limit: 200 }),
-      adminClient.models.NearFixUser.list({ limit: 200 }),
-      adminClient.models.NearFixProvider.list({ limit: 200 }),
-    ]);
-  throwModelErrors(bookingsResult.errors, "Unable to load booking records.");
-  throwModelErrors(servicesResult.errors, "Unable to load service prices.");
-  throwModelErrors(usersResult.errors, "Unable to load customer profiles.");
-  throwModelErrors(providersResult.errors, "Unable to load provider profiles.");
-
-  return {
-    bookings: nonNullRecords(bookingsResult.data),
-    services: nonNullRecords(servicesResult.data),
-    users: nonNullRecords(usersResult.data),
-    providers: nonNullRecords(providersResult.data),
-  };
-};
+import { useAdmin } from "@/context/AdminContext";
 
 const currency = (amount: number) =>
   new Intl.NumberFormat(undefined, {
@@ -46,7 +20,7 @@ const currency = (amount: number) =>
   }).format(amount);
 
 export default function PaymentManagement() {
-  const { data, loading, error, refresh } = useAdminData(loadPaymentOverview);
+  const { data, loading, error, refresh } = useAdmin();
   const [search, setSearch] = useState("");
 
   const serviceById = useMemo(
@@ -96,7 +70,7 @@ export default function PaymentManagement() {
 
   return (
     <section className="mx-auto max-w-[1280px] space-y-6 px-1 py-2 text-[var(--text)] md:px-2">
-      <PageHeader
+      <AdminPageHeader
         title="Payments"
         description="Booking-based payment overview. The current data model does not store payment transactions, so amounts below are service-price estimates."
         action={
@@ -106,7 +80,7 @@ export default function PaymentManagement() {
 
       {error && <ErrorState message={error} />}
       {loading && !data ? (
-        <LoadingState />
+        <AdminOverviewSkeleton cards={3} showChart={false} />
       ) : (
         <>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">

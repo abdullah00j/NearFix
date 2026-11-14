@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
-import { Camera, ChevronDown, ImagePlus, Info, Trash2 } from "lucide-react";
+import {
+  Camera,
+  ChevronDown,
+  ImagePlus,
+  Info,
+  Trash2,
+  UserRound,
+} from "lucide-react";
 import { useGetUser } from "../../hooks/usegetUser";
-import ProfileSkeleton from "../../skeletons/ProfileSkeleton";
+import ProfileSkeleton from "./Skeleton/ProfileSkeleton";
+import CommonPageHeader from "@/components/Pages/COMMONPAGES/Shared/CommonPageHeader";
+import ProviderDetails from "@/components/Pages/COMMONPAGES/Profile/ProviderDetails";
+import { useProvider } from "@/context/ProviderContext";
 
 type Theme = "Light" | "Dark" | "System";
 
@@ -15,6 +25,12 @@ type Device = {
 
 const Profile = () => {
   const { user, loading, error } = useGetUser();
+  const {
+    currentProvider,
+    loading: providerLoading,
+    error: providerError,
+  } = useProvider();
+
   const userProfile = {
     name: user?.name ?? "",
     profileImage: user?.profileImage ?? "",
@@ -90,15 +106,12 @@ const Profile = () => {
     >
       <div className="mx-auto max-w-[1280px] ">
         <section>
-          <h1
-            className={`
-              text-xl
-              font-medium
-              text-slate-900 dark:text-slate-100
-            `}
-          >
-            Profile
-          </h1>
+          <CommonPageHeader
+            eyebrow="Your account"
+            icon={<UserRound size={16} />}
+            title="Profile"
+            description="Manage your personal details, preferences, and account settings."
+          />
 
           {/* ================= AVATAR ================= */}
 
@@ -264,6 +277,14 @@ const Profile = () => {
             </p>
           </div>
         </section>
+
+        {user?.activeRole === "PROVIDER" && (
+          <ProviderDetails
+            provider={currentProvider}
+            loading={providerLoading}
+            error={providerError}
+          />
+        )}
 
         {/* =================================================
             SYSTEM PREFERENCES

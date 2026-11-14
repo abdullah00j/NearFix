@@ -1,5 +1,6 @@
 import { useState } from "react";
-import NotificationHeader from "../../components/Pages/COMMONPAGES/Notifications/NotificationHeader";
+import { Bell, CheckCheck } from "lucide-react";
+import CommonPageHeader from "@/components/Pages/COMMONPAGES/Shared/CommonPageHeader";
 import NotificationList from "../../components/Pages/COMMONPAGES/Notifications/NotificationList";
 import {
   initialNotifications,
@@ -18,9 +19,22 @@ export default function NotificationsPage() {
 
   return (
     <section className="mx-auto max-w-[1000px] space-y-6 px-1 py-2 text-[var(--text)] md:px-2">
-      <NotificationHeader
-        onMarkAllAsRead={markAllAsRead}
-        hasUnread={notifications.some(({ unread }) => unread)}
+      <CommonPageHeader
+        eyebrow="Stay up to date"
+        icon={<Bell size={16} />}
+        title="Notifications"
+        description="Booking updates, messages, and other activity in one place."
+        action={
+          <button
+            type="button"
+            onClick={markAllAsRead}
+            disabled={!notifications.some(({ unread }) => unread)}
+            className="inline-flex w-fit items-center gap-2 rounded-xl border border-line bg-[var(--panel)] px-3 py-2 text-sm font-medium text-[var(--muted)] transition hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <CheckCheck size={16} />
+            Mark all as read
+          </button>
+        }
       />
 
       <NotificationList

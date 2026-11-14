@@ -1,18 +1,87 @@
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useCurrentUser } from "../../context/UserContext";
-import { useProviderWorkspace } from "./providerData";
-import ProviderDashboardHeader from "@/components/Pages/PROVIDER/Dasboard/ProviderDashboardHeader";
-import ProviderDashboardStatsCards from "@/components/Pages/PROVIDER/Dasboard/ProviderDashboardStatsCards";
-import ProviderDashboardEarningGraph from "@/components/Pages/PROVIDER/Dasboard/ProviderDashboardEarningGraph";
+
+import ProviderDashboardHeader from "@/components/Pages/PROVIDER/Dashboard/ProviderDashboardHeader";
+import ProviderDashboardStatsCards from "@/components/Pages/PROVIDER/Dashboard/ProviderDashboardStatsCards";
+import ProviderDashboardEarningGraph from "@/components/Pages/PROVIDER/Dashboard/ProviderDashboardEarningGraph";
+import { useProvider } from "@/context/ProviderContext";
+import { useCurrentUser } from "@/context/UserContext";
+import ProviderPageSkeleton from "./ProviderSkeleton/ProviderPageSkeleton";
 
 export default function ProviderDashboard() {
+  const { currentProvider, loading, error, refresh } = useProvider();
   const { currentUser } = useCurrentUser();
-  const { data, loading, error, refresh } = useProviderWorkspace();
-  const provider = data?.provider;
-  const services = data?.services ?? [];
-  const bookings = data?.bookings ?? [];
-  const reviews = data?.reviews ?? [];
+
+  const serviceIds = ["demo-plumbing", "demo-electrical", "demo-cleaning"];
+
+  const monthDate = (monthsAgo: number, day: number) => {
+    const date = new Date();
+    date.setDate(1);
+    date.setMonth(date.getMonth() - monthsAgo);
+    date.setDate(day);
+    return date.toISOString();
+  };
+  const workspace = {
+    services: [
+      {
+        id: serviceIds[0],
+        category: "Plumbing repair",
+        price: 85,
+        isActive: true,
+      },
+      {
+        id: serviceIds[1],
+        category: "Electrical work",
+        price: 120,
+        isActive: true,
+      },
+      {
+        id: serviceIds[2],
+        category: "Home cleaning",
+        price: 65,
+        isActive: false,
+      },
+    ],
+    bookings: [
+      {
+        id: "demo-booking-1",
+        providerServiceId: serviceIds[0],
+        status: "COMPLETED",
+        createdAt: monthDate(0, 5),
+        completedAt: monthDate(0, 8),
+        updatedAt: monthDate(0, 8),
+      },
+      {
+        id: "demo-booking-2",
+        providerServiceId: serviceIds[1],
+        status: "PENDING",
+        createdAt: monthDate(0, 12),
+        scheduledAt: monthDate(0, 20),
+        updatedAt: monthDate(0, 12),
+      },
+      {
+        id: "demo-booking-3",
+        providerServiceId: serviceIds[2],
+        status: "COMPLETED",
+        createdAt: monthDate(1, 6),
+        completedAt: monthDate(1, 9),
+        updatedAt: monthDate(1, 9),
+      },
+      {
+        id: "demo-booking-4",
+        providerServiceId: serviceIds[0],
+        status: "COMPLETED",
+        createdAt: monthDate(2, 14),
+        completedAt: monthDate(2, 17),
+        updatedAt: monthDate(2, 17),
+      },
+    ],
+    reviews: [{ rating: 5 }, { rating: 4 }, { rating: 5 }],
+  };
+  const provider = currentProvider;
+  const services = workspace?.services ?? [];
+  const bookings = workspace?.bookings ?? [];
+  const reviews = workspace?.reviews ?? [];
   const completedBookings = bookings.filter(
     (booking) => booking.status === "COMPLETED",
   );
@@ -47,6 +116,8 @@ export default function ProviderDashboard() {
   const recentBookings = [...bookings]
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     .slice(0, 5);
+
+  if (loading) return <ProviderPageSkeleton />;
 
   return (
     <section className="mx-auto max-w-[1280px] space-y-6 px-1 py-2 text-[var(--text)] md:px-2">

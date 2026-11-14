@@ -44,13 +44,15 @@ export default function ProviderCard({
               <p className="mt-0.5 text-sm text-[var(--muted)]">{category}</p>
             </div>
           </div>
-          <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold">
-            <Star size={15} className="text-primary" fill="currentColor" />
-            {rating}
-            <span className="font-normal text-[var(--muted)]">
-              ({reviewCount})
+          {reviewCount > 0 && (
+            <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold">
+              <Star size={15} className="text-primary" fill="currentColor" />
+              {rating}
+              <span className="font-normal text-[var(--muted)]">
+                ({reviewCount})
+              </span>
             </span>
-          </span>
+          )}
         </div>
 
         <p className="mt-4 min-h-10 text-sm leading-5 text-[var(--muted)]">

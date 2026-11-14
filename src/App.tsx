@@ -1,6 +1,9 @@
 import { RouterProvider } from "react-router-dom";
 import { NavbarProvider } from "./context/NavbarContext";
 import { UserProvider } from "./context/UserContext";
+import { NearfixProvider } from "./context/ProviderContext";
+import { AdminProvider } from "./context/AdminContext";
+
 import router from "./Router";
 import { ToastContainer } from "react-toastify";
 import { useEffect } from "react";
@@ -45,17 +48,21 @@ function App() {
     <>
       <NavbarProvider>
         <UserProvider>
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            closeOnClick
-            pauseOnHover
-            draggable
-            theme="light"
-            className="nearfix-toast-container"
-          />
-          <RouterProvider router={router} />
+          <AdminProvider>
+            <NearfixProvider>
+              <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                closeOnClick
+                pauseOnHover
+                draggable
+                theme="light"
+                className="nearfix-toast-container"
+              />
+              <RouterProvider router={router} />
+            </NearfixProvider>
+          </AdminProvider>
         </UserProvider>
       </NavbarProvider>
     </>

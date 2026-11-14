@@ -3,48 +3,27 @@ import { Search } from "lucide-react";
 import {
   DataTable,
   ErrorState,
-  LoadingState,
-  PageHeader,
   Panel,
   RefreshButton,
   StatusBadge,
-} from "./AdminUI";
+} from "@/components/Pages/ADMIN/Shared";
+import AdminPageHeader from "@/components/Pages/ADMIN/Shared/AdminPageHeader";
+import AdminTableSkeleton from "./AdminSkeleton/AdminTableSkeleton";
 import { formatDate } from "./adminFormat";
-import {
-  adminClient,
-  adminGraphqlClient,
-  nonNullRecords,
-  throwModelErrors,
-  useAdminData,
-} from "./adminData";
-import { updateProviderService } from "../../graphql/mutations";
-
-const loadServices = async () => {
-  const [servicesResult, providersResult] = await Promise.all([
-    adminClient.models.ProviderService.list({ limit: 200 }),
-    adminClient.models.NearFixProvider.list({ limit: 200 }),
-  ]);
-  throwModelErrors(servicesResult.errors, "Unable to load service listings.");
-  throwModelErrors(providersResult.errors, "Unable to load providers.");
-  return {
-    services: nonNullRecords(servicesResult.data),
-    providers: nonNullRecords(providersResult.data),
-  };
-};
+import { useAdmin } from "@/context/AdminContext";
+import { useUpdateAdminService } from "@/data/ADMIN/AdminMutation";
 
 export default function ServiceManagement() {
-  const { data, loading, error, refresh } = useAdminData(loadServices);
+  const { data, loading, error, refresh } = useAdmin();
+  const updateAdminService = useUpdateAdminService();
   const [search, setSearch] = useState("");
   const [actionError, setActionError] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
 
-  const providerNames = useMemo(
+  const providerById = useMemo(
     () =>
       new Map(
-        (data?.providers ?? []).map((provider) => [
-          provider.id,
-          provider.businessName || provider.userId,
-        ]),
+        (data?.providers ?? []).map((provider) => [provider.id, provider]),
       ),
     [data?.providers],
   );
@@ -55,27 +34,24 @@ export default function ServiceManagement() {
         service.category,
         service.description ?? "",
         service.providerId,
-        providerNames.get(service.providerId) ?? "",
+        service.pricingType ?? "",
+        ...(service.ProductImages ?? []),
+        providerById.get(service.providerId)?.businessName ?? "",
+        providerById.get(service.providerId)?.serviceArea ?? "",
+        providerById.get(service.providerId)?.availabilityStatus ?? "",
+        providerById.get(service.providerId)?.selfie ?? "",
       ]
         .join(" ")
         .toLowerCase()
         .includes(query),
     );
-  }, [data?.services, providerNames, search]);
+  }, [data?.services, providerById, search]);
 
   const toggleService = async (id: string, isActive: boolean) => {
     setSavingId(id);
     setActionError(null);
     try {
-      const result = await adminGraphqlClient.graphql({
-        query: updateProviderService,
-        variables: { input: { id, isActive: !isActive } },
-      });
-      throwModelErrors(result.errors, "Unable to update this service.");
-      if (!result.data?.updateProviderService) {
-        throw new Error("The service listing was not updated.");
-      }
-      await refresh();
+      await updateAdminService.mutateAsync({ id, isActive: !isActive });
     } catch (mutationError) {
       setActionError(
         mutationError instanceof Error
@@ -89,7 +65,7 @@ export default function ServiceManagement() {
 
   return (
     <section className="mx-auto max-w-[1280px] space-y-6 px-1 py-2 text-[var(--text)] md:px-2">
-      <PageHeader
+      <AdminPageHeader
         title="Service management"
         description="Review provider listings, prices, categories, and availability."
         action={
@@ -119,58 +95,121 @@ export default function ServiceManagement() {
         }
       >
         {loading && !data ? (
-          <LoadingState />
+          <AdminTableSkeleton columns={14} />
         ) : (
           <DataTable
-            headers={["Service", "Provider", "Price", "Added", "Status", ""]}
+            minWidth={1900}
+            tableLayout="fixed"
+            headers={[
+              "ID",
+              "Description",
+              "Price",
+              "Provider ID",
+              "Active",
+              "Category",
+              "Pricing type",
+              "Product images",
+              "Business name",
+              "Service area",
+              "Availability",
+              "Provider selfie",
+              "Added",
+              "Action",
+            ]}
             isEmpty={filtered.length === 0}
             emptyMessage="No service listings match your search."
           >
-            {filtered.map((service) => (
-              <tr key={service.id}>
-                <td className="px-4 py-3">
-                  <p className="font-medium">{service.category}</p>
-                  <p className="mt-0.5 max-w-64 truncate text-xs text-[var(--muted)]">
-                    {service.description || service.id}
-                  </p>
-                </td>
-                <td className="px-4 py-3">
-                  <p>
-                    {providerNames.get(service.providerId) ??
-                      "Unknown provider"}
-                  </p>
-                  <p className="mt-0.5 max-w-40 truncate text-xs text-[var(--muted)]">
-                    {service.providerId}
-                  </p>
-                </td>
-                <td className="px-4 py-3 font-medium">
-                  {new Intl.NumberFormat(undefined, {
-                    style: "currency",
-                    currency: "USD",
-                  }).format(service.price)}
-                </td>
-                <td className="px-4 py-3 text-[var(--muted)]">
-                  {formatDate(service.createdAt)}
-                </td>
-                <td className="px-4 py-3">
-                  <StatusBadge
-                    status={service.isActive ? "ACTIVE" : "INACTIVE"}
-                  />
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      void toggleService(service.id, Boolean(service.isActive))
-                    }
-                    disabled={savingId === service.id}
-                    className="rounded-lg border border-[var(--line)] px-3 py-1.5 text-xs font-medium transition hover:border-primary hover:text-primary disabled:opacity-60"
+            {filtered.map((service) => {
+              const provider = providerById.get(service.providerId);
+
+              return (
+                <tr key={service.id}>
+                  <td
+                    title={service.id}
+                    className="truncate px-4 py-3 font-mono text-xs"
                   >
-                    {service.isActive ? "Deactivate" : "Activate"}
-                  </button>
-                </td>
-              </tr>
-            ))}
+                    {service.id}
+                  </td>
+                  <td
+                    title={service.description || undefined}
+                    className="truncate px-4 py-3"
+                  >
+                    {service.description || "—"}
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3 font-medium">
+                    {new Intl.NumberFormat(undefined, {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(service.price)}
+                  </td>
+                  <td
+                    title={service.providerId}
+                    className="truncate px-4 py-3 font-mono text-xs"
+                  >
+                    {service.providerId}
+                  </td>
+                  <td className="px-4 py-3">
+                    <StatusBadge
+                      status={service.isActive ? "ACTIVE" : "INACTIVE"}
+                    />
+                  </td>
+                  <td className="px-4 py-3">{service.category}</td>
+                  <td className="whitespace-nowrap px-4 py-3">
+                    {service.pricingType?.replaceAll("_", " ") ?? "—"}
+                  </td>
+                  <td className="px-4 py-3 text-xs">
+                    {service.ProductImages?.filter((image): image is string =>
+                      Boolean(image),
+                    ).length ? (
+                      <div className="space-y-1">
+                        {service.ProductImages.filter(
+                          (image): image is string => Boolean(image),
+                        ).map((image, index) => (
+                          <p
+                            key={`${service.id}-image-${index}`}
+                            title={image}
+                            className="truncate"
+                          >
+                            Image {index + 1}: {image}
+                          </p>
+                        ))}
+                      </div>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
+                  <td className="px-4 py-3">{provider?.businessName || "—"}</td>
+                  <td className="px-4 py-3">{provider?.serviceArea || "—"}</td>
+                  <td className="px-4 py-3">
+                    {provider?.availabilityStatus?.replaceAll("_", " ") ?? "—"}
+                  </td>
+                  <td
+                    title={provider?.selfie ?? undefined}
+                    className="truncate px-4 py-3 text-xs"
+                  >
+                    {provider?.selfie || "—"}
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3 text-[var(--muted)]">
+                    {formatDate(service.createdAt)}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        void toggleService(
+                          service.id,
+                          Boolean(service.isActive),
+                        )
+                      }
+                      disabled={savingId === service.id}
+                      className="rounded-lg border border-[var(--line)] px-3 py-1.5 text-xs font-medium transition hover:border-primary hover:text-primary disabled:opacity-60"
+                    >
+                      {service.isActive ? "Deactivate" : "Activate"}
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </DataTable>
         )}
       </Panel>

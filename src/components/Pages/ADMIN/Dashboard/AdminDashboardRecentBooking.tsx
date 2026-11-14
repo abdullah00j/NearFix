@@ -1,5 +1,5 @@
 import { formatDate } from "@/pages/Admin/adminFormat";
-import { DataTable, Panel, StatusBadge } from "@/pages/Admin/AdminUI";
+import { DataTable, Panel, StatusBadge } from "@/components/Pages/ADMIN/Shared";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 

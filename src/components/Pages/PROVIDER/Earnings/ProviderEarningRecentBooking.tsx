@@ -1,7 +1,4 @@
-import {
-  formatCurrency,
-  formatProviderDate,
-} from "@/pages/Provider/providerData";
+import { formatCurrency, formatProviderDate } from "@/lib/utilFunctions";
 import { CircleDollarSign, Info } from "lucide-react";
 
 type ProviderDashboardRecentBookingBooking = {

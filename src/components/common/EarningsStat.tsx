@@ -1,4 +1,4 @@
-import { formatCurrency } from "@/pages/Provider/providerData";
+import { formatCurrency } from "@/lib/utilFunctions";
 
 export default function EarningsStat({
   label,

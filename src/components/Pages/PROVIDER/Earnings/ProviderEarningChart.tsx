@@ -1,4 +1,4 @@
-import { formatCurrency } from "@/pages/Provider/providerData";
+import { formatCurrency } from "@/lib/utilFunctions";
 import {
   Bar,
   BarChart,

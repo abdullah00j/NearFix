@@ -1,5 +1,5 @@
-import { StatCard } from "@/pages/Admin/AdminUI";
-import type { AdminDashboardData } from "@/pages/Admin/adminData";
+import { StatCard } from "@/components/Pages/ADMIN/Shared";
+import type { AdminDashboardData } from "@/data/ADMIN/AdminServices";
 
 interface AdminDashboardCardsProps {
   data: AdminDashboardData | null;

@@ -1,8 +1,8 @@
-import { fetchAuthSession } from "aws-amplify/auth";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Loader from "./components/common/Loader";
 import { useCurrentUser } from "./context/UserContext";
+import { getCurrentAuthSession } from "@/lib/userServices";
 
 type Role = "CUSTOMER" | "PROVIDER" | "ADMIN";
 
@@ -16,31 +16,24 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
   const { role, setRole, currentUser } = useCurrentUser();
   const location = useLocation();
 
-  console.log(currentUser);
-
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const { tokens } = await fetchAuthSession();
-        if (!tokens) {
+        const session = await getCurrentAuthSession();
+        if (!session.authenticated) {
           setIsAuthenticated(false);
           return;
         }
-        const groups = tokens?.idToken?.payload["cognito:groups"];
-        const validGroups: Role[] = Array.isArray(groups)
-          ? groups.filter(
-              (group): group is Role =>
-                group === "CUSTOMER" ||
-                group === "PROVIDER" ||
-                group === "ADMIN",
-            )
-          : [];
+        const validGroups: Role[] = session.groups.filter(
+          (group): group is Role =>
+            group === "CUSTOMER" || group === "PROVIDER" || group === "ADMIN",
+        );
 
         if (currentUser) {
           const activeRole = currentUser.activeRole;
           setRole(activeRole ? [activeRole] : validGroups);
         }
-        setIsAuthenticated(!!tokens);
+        setIsAuthenticated(session.authenticated);
       } catch {
         setIsAuthenticated(false);
       }
@@ -48,7 +41,6 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
 
     checkSession();
   }, [setRole, currentUser]);
-  console.log(role);
   if (isAuthenticated === null || (isAuthenticated && role === null)) {
     return (
       <div className="h-screen flex items-center justify-center">

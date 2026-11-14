@@ -3,38 +3,26 @@ import { Plus, Search } from "lucide-react";
 import {
   DataTable,
   ErrorState,
-  LoadingState,
-  PageHeader,
   Panel,
   RefreshButton,
   StatusBadge,
-} from "./AdminUI";
+} from "@/components/Pages/ADMIN/Shared";
+import AdminPageHeader from "@/components/Pages/ADMIN/Shared/AdminPageHeader";
+import AdminTableSkeleton from "./AdminSkeleton/AdminTableSkeleton";
 import { formatDate } from "./adminFormat";
+import { useAdmin } from "@/context/AdminContext";
 import {
-  adminClient,
-  adminGraphqlClient,
-  nonNullRecords,
-  throwModelErrors,
-  useAdminData,
-} from "./adminData";
-import { createCategory, updateCategory } from "../../graphql/mutations";
-
-const loadCategories = async () => {
-  const result = await adminClient.models.Category.list({ limit: 200 });
-  throwModelErrors(result.errors, "Unable to load categories.");
-  return nonNullRecords(result.data);
-};
+  useCreateAdminCategory,
+  useUpdateAdminCategory,
+} from "@/data/ADMIN/AdminMutation";
 
 export default function CategoryManagement() {
-  const {
-    data: categories,
-    loading,
-    error,
-    refresh,
-  } = useAdminData(loadCategories);
+  const { data, loading, error, refresh } = useAdmin();
+  const categories = data?.categories ?? null;
   const [name, setName] = useState("");
   const [search, setSearch] = useState("");
-  const [saving, setSaving] = useState(false);
+  const createCategoryMutation = useCreateAdminCategory();
+  const updateCategoryMutation = useUpdateAdminCategory();
   const [actionError, setActionError] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
@@ -49,42 +37,23 @@ export default function CategoryManagement() {
     const trimmedName = name.trim();
     if (!trimmedName) return;
 
-    setSaving(true);
     setActionError(null);
     try {
-      const result = await adminGraphqlClient.graphql({
-        query: createCategory,
-        variables: { input: { name: trimmedName, isActive: true } },
-      });
-      throwModelErrors(result.errors, "Unable to create this category.");
-      if (!result.data?.createCategory) {
-        throw new Error("The category was not created.");
-      }
+      await createCategoryMutation.mutateAsync(trimmedName);
       setName("");
-      await refresh();
     } catch (mutationError) {
       setActionError(
         mutationError instanceof Error
           ? mutationError.message
           : "Unable to create this category.",
       );
-    } finally {
-      setSaving(false);
     }
   };
 
   const toggleCategory = async (id: string, isActive: boolean) => {
     setActionError(null);
     try {
-      const result = await adminGraphqlClient.graphql({
-        query: updateCategory,
-        variables: { input: { id, isActive: !isActive } },
-      });
-      throwModelErrors(result.errors, "Unable to update this category.");
-      if (!result.data?.updateCategory) {
-        throw new Error("The category was not updated.");
-      }
-      await refresh();
+      await updateCategoryMutation.mutateAsync({ id, isActive: !isActive });
     } catch (mutationError) {
       setActionError(
         mutationError instanceof Error
@@ -96,7 +65,7 @@ export default function CategoryManagement() {
 
   return (
     <section className="mx-auto max-w-[1280px] space-y-6 px-1 py-2 text-[var(--text)] md:px-2">
-      <PageHeader
+      <AdminPageHeader
         title="Category management"
         description="Create and maintain the service categories customers can browse."
         action={
@@ -126,11 +95,11 @@ export default function CategoryManagement() {
           />
           <button
             type="submit"
-            disabled={saving}
+            disabled={createCategoryMutation.isPending}
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-60"
           >
             <Plus size={16} />
-            {saving ? "Adding..." : "Add category"}
+            {createCategoryMutation.isPending ? "Adding..." : "Add category"}
           </button>
         </form>
       </Panel>
@@ -151,7 +120,7 @@ export default function CategoryManagement() {
         }
       >
         {loading && !categories ? (
-          <LoadingState />
+          <AdminTableSkeleton columns={4} />
         ) : (
           <DataTable
             headers={["Category", "Status", "Created", ""]}

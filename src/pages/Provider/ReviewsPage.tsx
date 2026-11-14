@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { useProviderWorkspace } from "./providerData";
 import ProviderReviewHeader from "@/components/Pages/PROVIDER/Review/ProviderReviewHeader";
 import ProviderRatingChart from "@/components/Pages/PROVIDER/Review/ProviderRatingChart";
 import ProviderReviewListing from "@/components/Pages/PROVIDER/Review/ProviderReviewListing";
+import { useProvider } from "@/context/ProviderContext";
+import ProviderPageSkeleton from "./ProviderSkeleton/ProviderPageSkeleton";
 
 export default function ReviewsPage() {
-  const { data, loading, error, refresh } = useProviderWorkspace();
+  const { data, loading, error, refresh } = useProvider();
   const [search, setSearch] = useState("");
   const [ratingFilter, setRatingFilter] = useState("ALL");
+  if (loading && !data) return <ProviderPageSkeleton />;
+
   const reviews = data?.reviews ?? [];
   const averageRating = reviews.length
     ? reviews.reduce((total, review) => total + review.rating, 0) /

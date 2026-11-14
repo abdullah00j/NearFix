@@ -3,38 +3,20 @@ import { Search } from "lucide-react";
 import {
   DataTable,
   ErrorState,
-  LoadingState,
-  PageHeader,
   Panel,
   RefreshButton,
   StatCard,
   StatusBadge,
-} from "./AdminUI";
+} from "@/components/Pages/ADMIN/Shared";
+import AdminPageHeader from "@/components/Pages/ADMIN/Shared/AdminPageHeader";
+import AdminOverviewSkeleton from "./AdminSkeleton/AdminOverviewSkeleton";
 import { formatDate } from "./adminFormat";
-import {
-  adminClient,
-  adminGraphqlClient,
-  nonNullRecords,
-  throwModelErrors,
-  useAdminData,
-} from "./adminData";
-import { updateNotification } from "../../graphql/mutations";
-
-const loadNotifications = async () => {
-  const [notificationsResult, usersResult] = await Promise.all([
-    adminClient.models.Notification.list({ limit: 200 }),
-    adminClient.models.NearFixUser.list({ limit: 200 }),
-  ]);
-  throwModelErrors(notificationsResult.errors, "Unable to load notifications.");
-  throwModelErrors(usersResult.errors, "Unable to load customer profiles.");
-  return {
-    notifications: nonNullRecords(notificationsResult.data),
-    users: nonNullRecords(usersResult.data),
-  };
-};
+import { useAdmin } from "@/context/AdminContext";
+import { useMarkAdminNotificationRead } from "@/data/ADMIN/AdminMutation";
 
 export default function AdminNotifications() {
-  const { data, loading, error, refresh } = useAdminData(loadNotifications);
+  const { data, loading, error, refresh } = useAdmin();
+  const markNotificationRead = useMarkAdminNotificationRead();
   const [search, setSearch] = useState("");
   const [actionError, setActionError] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
@@ -62,15 +44,7 @@ export default function AdminNotifications() {
     setSavingId(id);
     setActionError(null);
     try {
-      const result = await adminGraphqlClient.graphql({
-        query: updateNotification,
-        variables: { input: { id, isRead: true } },
-      });
-      throwModelErrors(result.errors, "Unable to update this notification.");
-      if (!result.data?.updateNotification) {
-        throw new Error("The notification was not updated.");
-      }
-      await refresh();
+      await markNotificationRead.mutateAsync(id);
     } catch (mutationError) {
       setActionError(
         mutationError instanceof Error
@@ -88,7 +62,7 @@ export default function AdminNotifications() {
 
   return (
     <section className="mx-auto max-w-[1280px] space-y-6 px-1 py-2 text-[var(--text)] md:px-2">
-      <PageHeader
+      <AdminPageHeader
         title="Notifications"
         description="Review notifications already sent to customers and mark them as read."
         action={
@@ -102,7 +76,7 @@ export default function AdminNotifications() {
         />
       )}
       {loading && !data ? (
-        <LoadingState />
+        <AdminOverviewSkeleton cards={2} showChart={false} />
       ) : (
         <>
           <div className="grid gap-3 sm:grid-cols-2">

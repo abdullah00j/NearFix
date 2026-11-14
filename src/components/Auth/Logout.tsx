@@ -1,13 +1,10 @@
-import { signOut } from "aws-amplify/auth";
 import { LogOut } from "lucide-react";
+import { signOutCurrentUser } from "@/lib/userServices";
 
 function Logout() {
   const handleLogout = async () => {
     try {
-      await signOut();
-
-      console.log("User logged out");
-
+      await signOutCurrentUser();
       window.location.href = "/login";
     } catch (error) {
       console.error("Logout failed:", error);
