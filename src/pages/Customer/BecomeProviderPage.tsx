@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "@/context/UserContext";
 import { useCreateProviderApplication } from "@/data/PROVIDER/ProviderMutation";
 import { useProviderApplicationStatusQuery } from "@/data/PROVIDER/ProviderQueries";
-import { getCurrentAuthSession } from "@/lib/userServices";
+import { getCurrentAuthSession } from "@/data/userServices";
 
 type ProviderApplication = {
   businessName: string;

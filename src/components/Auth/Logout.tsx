@@ -1,5 +1,5 @@
 import { LogOut } from "lucide-react";
-import { signOutCurrentUser } from "@/lib/userServices";
+import { signOutCurrentUser } from "@/data/userServices";
 
 function Logout() {
   const handleLogout = async () => {

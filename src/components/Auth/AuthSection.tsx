@@ -1,6 +1,6 @@
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import Button from "../common/Button";
-import { signInWithGoogle } from "@/lib/userServices";
+import { signInWithGoogle } from "@/data/userServices";
 
 type AuthSectionProps = {
   setShowPhonePopup: React.Dispatch<React.SetStateAction<boolean>>;

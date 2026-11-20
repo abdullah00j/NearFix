@@ -101,6 +101,7 @@ export const handler: AppSyncResolverHandler<EnsureUserEvent, boolean> = async (
           ...(picture ? { profileImage: picture } : {}),
           isPhoneVerified: false,
           owner,
+          activeRole: "CUSTOMER",
           createdAt: now,
           updatedAt: now,
         },

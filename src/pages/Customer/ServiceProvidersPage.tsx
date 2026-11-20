@@ -17,6 +17,7 @@ type ProviderListing = {
   startingPrice: number;
   initials: string;
   verified: boolean;
+  imageUrl: string | null;
 };
 
 function getInitials(name: string) {
@@ -61,6 +62,7 @@ export default function ServiceProvidersPage() {
             startingPrice: service.price,
             initials: getInitials(name) || "NF",
             verified: provider?.verificationStatus === "APPROVED",
+            imageUrl: service.imageUrl,
           };
         }),
     [data],

@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Loader from "./components/common/Loader";
 import { useCurrentUser } from "./context/UserContext";
-import { getCurrentAuthSession } from "@/lib/userServices";
+import { getCurrentAuthSession } from "@/data/userServices";
 
 type Role = "CUSTOMER" | "PROVIDER" | "ADMIN";
 

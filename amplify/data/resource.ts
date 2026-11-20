@@ -27,14 +27,14 @@ const schema = a
     // Profile of every app user (customer or provider).
     NearFixUser: a
       .model({
-        // Field-level rules: users can read these but cannot edit them.
-        // Only ADMIN can update.
+        // Users can update their own display name; ADMIN can manage all names.
         name: a
           .string()
           .required()
           .authorization((allow) => [
             allow.authenticated().to(["read"]),
             allow.owner().to(["read"]),
+            allow.owner().to(["update"]),
             allow.group("ADMIN").to(["read", "update"]),
           ]),
 
@@ -58,6 +58,9 @@ const schema = a
         profileImage: a.string(),
         phone: a.string(),
         activeRole: a.enum(["CUSTOMER", "PROVIDER"]),
+        // These preferences use the model-level owner authorization below.
+        language: a.string(),
+        theme: a.string(),
         // Only the owner (read) and ADMIN (read/update) can see this field.
         isPhoneVerified: a
           .boolean()

@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import SearchBar from "./SearchBar";
 import Logout from "../Auth/Logout";
+import { useCurrentUser } from "@/context/UserContext";
 
 const UserSideBar = [
   {
@@ -42,18 +43,10 @@ const UserSideBar = [
 function Navbar() {
   const navigate = useNavigate();
   const pathname = useLocation();
-  //   const { imageUrl } = useImage();
-  //   const dispatch = useDispatch<AppDispatch>();
-  //   const { projects, loading: projectsLoading } = useSelector(
-  //     (state: RootState) => state.projects,
-  //   );
+  const { currentUser } = useCurrentUser();
   const [projectsOpen, setProjectsOpen] = useState(false);
   const projectMenuRef = useRef<HTMLDivElement>(null);
   console.log(projectsOpen, "projectsOpen");
-  //   useEffect(() => {
-  //     dispatch(fetchProjects());
-  //   }, [dispatch]);
-
   useEffect(() => {
     const closeOnOutsideClick = (event: MouseEvent) => {
       if (
@@ -141,7 +134,7 @@ function Navbar() {
         >
           <img
             className="h-full w-full rounded-full object-cover"
-            src={"/user-icon.webp"}
+            src={currentUser?.profileImage ?? "/user-icon.webp"}
             alt="Profile"
             // onError={(event) => {
             //   event.currentTarget.src =

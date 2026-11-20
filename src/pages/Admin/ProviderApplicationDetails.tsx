@@ -13,6 +13,7 @@ import {
   Hash,
 } from "lucide-react";
 import { useAdminDocumentUrl } from "@/data/ADMIN/AdminQueries";
+import { useUserProfileImageUrl } from "@/data/userQueries";
 import type { ProviderApplication } from "@/data/ADMIN/AdminTypes";
 
 export type { ProviderApplication } from "@/data/ADMIN/AdminTypes";
@@ -161,6 +162,9 @@ export default function ProviderApplicationDetails({
   onReject,
 }: Props) {
   const applicant = application.users;
+  const applicantImageQuery = useUserProfileImageUrl(
+    applicant?.profileImage ?? "",
+  );
   const canReview = application.applicationStatus.toUpperCase() === "PENDING";
 
   return (
@@ -169,9 +173,9 @@ export default function ProviderApplicationDetails({
       <section className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-5 sm:p-7">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-center gap-4">
-            {applicant?.profileImage ? (
+            {applicantImageQuery.data ? (
               <img
-                src={applicant.profileImage}
+                src={applicantImageQuery.data}
                 alt={applicant.name || "Applicant"}
                 className="h-16 w-16 shrink-0 rounded-full border border-[var(--line)] object-cover"
               />

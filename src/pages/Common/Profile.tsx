@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Camera,
   ChevronDown,
@@ -7,7 +7,15 @@ import {
   Trash2,
   UserRound,
 } from "lucide-react";
-import { useGetUser } from "../../hooks/usegetUser";
+import {
+  useCurrentUserProfileQuery,
+  useUserProfileImageUrl,
+} from "@/data/userQueries";
+import {
+  useUpdateCurrentUserPreference,
+  useUpdateCurrentUserForm,
+  useUploadCurrentUserProfileImage,
+} from "@/data/userMutations";
 import ProfileSkeleton from "./Skeleton/ProfileSkeleton";
 import CommonPageHeader from "@/components/Pages/COMMONPAGES/Shared/CommonPageHeader";
 import ProviderDetails from "@/components/Pages/COMMONPAGES/Profile/ProviderDetails";
@@ -24,7 +32,16 @@ type Device = {
 };
 
 const Profile = () => {
-  const { user, loading, error } = useGetUser();
+  const userQuery = useCurrentUserProfileQuery();
+  const user = userQuery.data ?? null;
+  const loading = userQuery.isLoading;
+  const error = userQuery.error instanceof Error ? userQuery.error : null;
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const uploadPhoto = useUploadCurrentUserProfileImage();
+  const updatePreference = useUpdateCurrentUserPreference();
+  const [name, setName] = useState<string | null>(null);
+  const updateForm = useUpdateCurrentUserForm();
+
   const {
     currentProvider,
     loading: providerLoading,
@@ -36,23 +53,39 @@ const Profile = () => {
     profileImage: user?.profileImage ?? "",
     email: user?.email ?? "",
   };
-  const profileImageSrc = userProfile.profileImage.trim() || "/user-icon.webp";
 
-  const [language, setLanguage] = useState("English");
+  const profileImageQuery = useUserProfileImageUrl(
+    userProfile.profileImage.trim(),
+  );
 
-  const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem("theme");
+  const profileImageSrc = profileImageQuery.data ?? "/user-icon.webp";
 
-    if (
-      savedTheme === "Light" ||
-      savedTheme === "Dark" ||
-      savedTheme === "System"
-    ) {
-      return savedTheme;
-    }
+  const [language, setLanguage] = useState<string | null>(null);
+  const [theme, setTheme] = useState<Theme | null>(null);
+  const effectiveTheme: Theme =
+    theme ??
+    (user?.theme === "Light" ||
+    user?.theme === "Dark" ||
+    user?.theme === "System"
+      ? user.theme
+      : (() => {
+          const savedTheme = localStorage.getItem("theme");
 
-    return "Light";
-  });
+          if (
+            savedTheme === "Light" ||
+            savedTheme === "Dark" ||
+            savedTheme === "System"
+          ) {
+            return savedTheme;
+          }
+
+          return "Light";
+        })());
+
+  useEffect(() => {
+    localStorage.setItem("theme", effectiveTheme);
+    window.dispatchEvent(new Event("nearfix:themechange"));
+  }, [effectiveTheme]);
 
   const [newsletterEnabled, setNewsletterEnabled] = useState(true);
 
@@ -66,13 +99,22 @@ const Profile = () => {
     },
   ]);
 
-  useEffect(() => {
-    localStorage.setItem("theme", theme);
-    window.dispatchEvent(new Event("nearfix:themechange"));
-  }, [theme]);
-
   const handleChangePhoto = () => {
-    console.log("Change profile photo clicked");
+    photoInputRef.current?.click();
+  };
+
+  const handlePhotoSelected = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.currentTarget.files?.[0];
+    event.currentTarget.value = "";
+    if (!file) return;
+
+    try {
+      await uploadPhoto.mutateAsync(file);
+    } catch {
+      // The mutation error is displayed beside the photo controls.
+    }
   };
 
   const handleNewsletterToggle = () => {
@@ -83,6 +125,16 @@ const Profile = () => {
     setDevices((previousDevices) =>
       previousDevices.filter((device) => device.id !== deviceId),
     );
+  };
+  const handleNameBlur = () => {
+    const trimmedName = (name ?? user?.name ?? "").trim();
+    if (!trimmedName || !user) return;
+    if (trimmedName === user.name) return;
+    updateForm.mutate({ userId: user.id, name: trimmedName });
+  };
+
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
   };
 
   if (loading) {
@@ -116,6 +168,14 @@ const Profile = () => {
           {/* ================= AVATAR ================= */}
 
           <div className="mt-8">
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handlePhotoSelected}
+              aria-label="Choose a profile photo"
+            />
             <p
               className={`
                 mb-3
@@ -131,6 +191,7 @@ const Profile = () => {
               <button
                 type="button"
                 onClick={handleChangePhoto}
+                disabled={uploadPhoto.isPending}
                 aria-label="Change profile picture"
                 className="
                   relative
@@ -191,12 +252,21 @@ const Profile = () => {
                 </div>
               </button>
             </div>
+            {profileImageQuery.isError && (
+              <p
+                role="alert"
+                className="mt-2 text-sm text-red-600 dark:text-red-400"
+              >
+                Unable to load your profile photo. Please try again later.
+              </p>
+            )}
 
             {/* Change Photo */}
 
             <button
               type="button"
               onClick={handleChangePhoto}
+              disabled={uploadPhoto.isPending}
               className={`
                 mt-3
                 inline-flex
@@ -214,33 +284,52 @@ const Profile = () => {
                 hover:bg-slate-50 dark:hover:bg-[#222222]
               `}
             >
-              <ImagePlus size={16} />
-              Change photo
+              {uploadPhoto.isPending ? (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent" />
+              ) : (
+                <ImagePlus size={16} />
+              )}
+              {uploadPhoto.isPending ? "Uploading photo..." : "Change photo"}
             </button>
+            {uploadPhoto.error && (
+              <p
+                role="alert"
+                className="mt-2 text-sm text-red-600 dark:text-red-400"
+              >
+                {uploadPhoto.error instanceof Error
+                  ? uploadPhoto.error.message
+                  : "Unable to update your profile photo."}
+              </p>
+            )}
           </div>
 
           {/* ================= NAME ================= */}
 
-          <div className="mt-5 w-full max-w-[320px]">
-            <label
-              htmlFor="name"
-              className={`
+          <div>
+            <div className="mt-5 w-full max-w-[320px]">
+              <label
+                htmlFor="name"
+                className={`
                 mb-2
                 block
                 text-sm
                 font-medium
                 text-slate-800 dark:text-slate-200
               `}
-            >
-              Name
-            </label>
+              >
+                Name
+              </label>
 
-            <input
-              id="name"
-              type="text"
-              value={userProfile.name}
-              // onChange={(event) => setName(event.target.value)}
-              className={`
+              <input
+                id="name"
+                type="text"
+                value={name ?? userProfile.name}
+                onChange={handleInput}
+                onBlur={handleNameBlur}
+                name="name"
+                placeholder="Enter your name"
+                autoComplete="name"
+                className={`
                 h-10
                 w-full
                 rounded-lg
@@ -255,26 +344,39 @@ const Profile = () => {
                 focus:border-slate-500 focus:ring-[#115e59] dark:focus:ring-[#14b8a6]
                 focus:ring-2
               `}
-            />
-          </div>
+              />
+              {updateForm.isError && (
+                <p role="alert" className="mt-2 text-sm text-red-600">
+                  {updateForm.error instanceof Error
+                    ? updateForm.error.message
+                    : "Unable to update your name."}
+                </p>
+              )}
+              {updateForm.isPending && (
+                <p role="status" className="mt-2 text-sm text-slate-500">
+                  Saving name...
+                </p>
+              )}
+            </div>
 
-          {/* ================= EMAIL ================= */}
+            {/* ================= EMAIL ================= */}
 
-          <div className="mt-5 w-full max-w-[320px]">
-            <p
-              className={`
+            <div className="mt-5 w-full max-w-[320px]">
+              <p
+                className={`
                 mb-2
                 text-sm
                 font-medium
                 text-slate-800 dark:text-slate-200
               `}
-            >
-              Email
-            </p>
+              >
+                Email
+              </p>
 
-            <p className={`text-sm text-slate-500 dark:text-slate-400`}>
-              {userProfile.email}
-            </p>
+              <p className={`text-sm text-slate-500 dark:text-slate-400`}>
+                {userProfile.email}
+              </p>
+            </div>
           </div>
         </section>
 
@@ -336,8 +438,17 @@ const Profile = () => {
               <div className="relative">
                 <select
                   id="language"
-                  value={language}
-                  onChange={(event) => setLanguage(event.target.value)}
+                  value={language ?? user?.language ?? "English"}
+                  onChange={(event) => {
+                    const nextLanguage = event.target.value;
+                    setLanguage(nextLanguage);
+                    if (user && nextLanguage !== user.language) {
+                      updatePreference.mutate({
+                        userId: user.id,
+                        language: nextLanguage,
+                      });
+                    }
+                  }}
                   className={`
                     h-10
                     w-full
@@ -394,8 +505,17 @@ const Profile = () => {
               <div className="relative">
                 <select
                   id="theme"
-                  value={theme}
-                  onChange={(event) => setTheme(event.target.value as Theme)}
+                  value={effectiveTheme}
+                  onChange={(event) => {
+                    const nextTheme = event.target.value as Theme;
+                    setTheme(nextTheme);
+                    if (user && nextTheme !== user.theme) {
+                      updatePreference.mutate({
+                        userId: user.id,
+                        theme: nextTheme,
+                      });
+                    }
+                  }}
                   className={`
                     h-10
                     w-full
@@ -756,6 +876,7 @@ const Profile = () => {
                           type="button"
                           onClick={() => handleRemoveDevice(device.id)}
                           aria-label="Remove device"
+
                           className="
                             text-slate-400
                             
@@ -788,6 +909,7 @@ const Profile = () => {
         >
           <button
             type="button"
+            disabled={true}
             // onClick={}
             className="
               rounded-lg

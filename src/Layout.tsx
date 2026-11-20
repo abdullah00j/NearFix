@@ -47,7 +47,7 @@ function Layout({ children }: { children: React.ReactNode }) {
           <AppWrapper>{children}</AppWrapper>
         </main>
       </div>
-      <LiveCustomerToast />
+      {role?.includes("ADMIN") && <LiveCustomerToast />}
     </div>
   );
 }

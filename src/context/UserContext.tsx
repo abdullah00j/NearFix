@@ -1,11 +1,14 @@
-import { useGetUser } from "@/hooks/usegetUser";
+import {
+  useCurrentUserProfileQuery,
+  useUserProfileImageUrl,
+} from "@/data/userQueries";
 import type { Schema } from "amplify/data/resource";
 import { createContext, useContext, useState } from "react";
 
 /* eslint-disable react-refresh/only-export-components */
 type User = Pick<
   Schema["NearFixUser"]["type"],
-  "id" | "name" | "email" | "profileImage" | "activeRole"
+  "id" | "name" | "email" | "profileImage" | "activeRole" | "language" | "theme"
 >;
 
 type role = "CUSTOMER" | "PROVIDER" | "ADMIN";
@@ -19,11 +22,19 @@ type UserContextValue = {
 const UserContext = createContext<UserContextValue | null>(null);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useGetUser();
+  const userQuery = useCurrentUserProfileQuery();
+  const user = userQuery.data ?? null;
   const [role, setRole] = useState<role[] | null>(null);
 
+  const profileImageQuery = useUserProfileImageUrl(
+    user?.profileImage?.trim() ?? "",
+  );
+  const currentUser: User | null = user
+    ? { ...user, profileImage: profileImageQuery.data ?? null }
+    : null;
+
   return (
-    <UserContext.Provider value={{ currentUser: user, role, setRole }}>
+    <UserContext.Provider value={{ currentUser, role, setRole }}>
       {children}
     </UserContext.Provider>
   );

@@ -1,3 +1,4 @@
+import { getUrl } from "aws-amplify/storage";
 import { client } from "../../lib/amplify";
 import { throwModelErrors } from "../../lib/errors";
 
@@ -15,6 +16,7 @@ export type PublicProviderService = {
   pricingType: "PER_TASK" | "PER_HOUR" | "PER_PRODUCT" | "PER_DAY" | null;
   isActive: boolean | null;
   providerId: string;
+  imageUrl: string | null;
   provider: {
     businessName: string | null;
     bio: string | null;
@@ -40,6 +42,7 @@ export async function getProviderServiceListing(): Promise<
         "pricingType",
         "isActive",
         "providerId",
+        "ProductImages",
       ] as const,
     }),
     client.models.NearFixProvider.list({
@@ -68,31 +71,73 @@ export async function getProviderServiceListing(): Promise<
       .map((provider) => [provider.id, provider]),
   );
 
-  return (serviceResult.data ?? [])
-    .filter((service) => service !== null)
-    .map((service) => {
-      const provider = providersById.get(service.providerId);
+  return Promise.all(
+    (serviceResult.data ?? [])
+      .filter((service) => service !== null)
+      .map(async (service) => {
+        const provider = providersById.get(service.providerId);
+        const imagePath = service.ProductImages?.find(
+          (image): image is string => Boolean(image),
+        );
+        let imageUrl: string | null = null;
 
-      return {
-        id: service.id,
-        description: service.description,
-        price: service.price,
-        category: service.category,
-        pricingType: service.pricingType,
-        isActive: service.isActive,
-        providerId: service.providerId,
-        provider: provider
-          ? {
-              businessName: provider.businessName,
-              bio: provider.bio,
-              experience: provider.experience,
-              serviceArea: provider.serviceArea,
-              verificationStatus: provider.verificationStatus,
-              availabilityStatus: provider.availabilityStatus,
+        if (imagePath) {
+          if (/^https?:\/\//i.test(imagePath)) {
+            imageUrl = imagePath;
+          } else {
+            try {
+              const { url } = await getUrl({
+                path: imagePath,
+                options: { expiresIn: 60 * 60 },
+              });
+              imageUrl = url.toString();
+            } catch {
+              // Keep the card's designed glass placeholder when an image is unavailable.
             }
-          : null,
-      };
-    });
+          }
+        }
+
+        return {
+          id: service.id,
+          description: service.description,
+          price: service.price,
+          category: service.category,
+          pricingType: service.pricingType,
+          isActive: service.isActive,
+          providerId: service.providerId,
+          imageUrl,
+          provider: provider
+            ? {
+                businessName: provider.businessName,
+                bio: provider.bio,
+                experience: provider.experience,
+                serviceArea: provider.serviceArea,
+                verificationStatus: provider.verificationStatus,
+                availabilityStatus: provider.availabilityStatus,
+              }
+            : null,
+        };
+      }),
+  );
+}
+
+export function observeProviderServiceChanges(onChange: () => void) {
+  let hasInitialSnapshot = false;
+
+  return client.models.ProviderService.observeQuery({
+    authMode: "userPool",
+  }).subscribe({
+    next: ({ isSynced }) => {
+      if (!isSynced) return;
+
+      if (!hasInitialSnapshot) {
+        hasInitialSnapshot = true;
+        return;
+      }
+
+      onChange();
+    },
+  });
 }
 
 export function observeNewCustomerSignups(

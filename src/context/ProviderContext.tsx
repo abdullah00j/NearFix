@@ -24,7 +24,9 @@ const ProviderContext = createContext<ProviderContextValue | null>(null);
 
 export const NearfixProvider = ({ children }: { children: ReactNode }) => {
   const { currentUser, role } = useCurrentUser();
+
   const isProvider = role?.includes("PROVIDER") ?? false;
+
   const query = useCurrentProviderQuery(
     isProvider ? currentUser?.id : undefined,
   );

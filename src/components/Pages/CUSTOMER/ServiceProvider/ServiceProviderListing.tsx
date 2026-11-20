@@ -13,6 +13,7 @@ type Provider = {
   startingPrice: number;
   initials: string;
   verified: boolean;
+  imageUrl: string | null;
 };
 
 export default function ServiceProviderListing({
@@ -45,6 +46,7 @@ export default function ServiceProviderListing({
               startingPrice={provider.startingPrice}
               verified={provider.verified}
               initials={provider.initials}
+              image={provider.imageUrl}
             />
           ))}
         </div>

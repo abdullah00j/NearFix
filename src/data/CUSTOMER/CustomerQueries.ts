@@ -7,18 +7,32 @@ import {
 import { customerKeys, providerServiceListingKeys } from "./CustomerKey";
 import {
   getProviderServiceListing,
+  observeProviderServiceChanges,
   observeNewCustomerSignups,
   type CustomerJoinNotice,
 } from "./CustomerServices";
 
 const liveCustomerJoinersKey = customerKeys.liveJoiners();
+const providerServiceListKey = providerServiceListingKeys.lists();
 
-export const useListProviderServices = () =>
-  useQuery({
-    queryKey: providerServiceListingKeys.lists(),
+export const useListProviderServices = () => {
+  const queryClient = useQueryClient();
+  const query = useQuery({
+    queryKey: providerServiceListKey,
     queryFn: getProviderServiceListing,
     placeholderData: keepPreviousData,
   });
+
+  useEffect(() => {
+    const subscription = observeProviderServiceChanges(() => {
+      void queryClient.invalidateQueries({ queryKey: providerServiceListKey });
+    });
+
+    return () => subscription.unsubscribe();
+  }, [queryClient]);
+
+  return query;
+};
 
 export const useLiveCustomerJoiner = (currentUserId?: string) => {
   const queryClient = useQueryClient();
