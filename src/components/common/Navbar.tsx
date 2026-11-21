@@ -6,7 +6,6 @@ import {
   UserRoundArrowLeft,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
 import SearchBar from "./SearchBar";
 import Logout from "../Auth/Logout";
 import { useCurrentUser } from "@/context/UserContext";
@@ -44,23 +43,6 @@ function Navbar() {
   const navigate = useNavigate();
   const pathname = useLocation();
   const { currentUser } = useCurrentUser();
-  const [projectsOpen, setProjectsOpen] = useState(false);
-  const projectMenuRef = useRef<HTMLDivElement>(null);
-  console.log(projectsOpen, "projectsOpen");
-  useEffect(() => {
-    const closeOnOutsideClick = (event: MouseEvent) => {
-      if (
-        projectMenuRef.current &&
-        !projectMenuRef.current.contains(event.target as Node)
-      ) {
-        setProjectsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", closeOnOutsideClick);
-    return () => document.removeEventListener("mousedown", closeOnOutsideClick);
-  }, []);
-
   const getDynamicLogo = () => {
     const currentPath = pathname.pathname;
     const currentItem = UserSideBar.find((item) => item.path === currentPath);
@@ -136,10 +118,9 @@ function Navbar() {
             className="h-full w-full rounded-full object-cover"
             src={currentUser?.profileImage ?? "/user-icon.webp"}
             alt="Profile"
-            // onError={(event) => {
-            //   event.currentTarget.src =
-            //     "/user-icon.webp";
-            // }}
+            onError={(event) => {
+              event.currentTarget.src = "/user-icon.webp";
+            }}
           />
         </button>
       </div>

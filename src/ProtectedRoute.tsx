@@ -40,7 +40,7 @@ const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
     };
 
     checkSession();
-  }, [setRole, currentUser]);
+  }, [setRole, currentUser?.id, currentUser?.activeRole]);
   if (isAuthenticated === null || (isAuthenticated && role === null)) {
     return (
       <div className="h-screen flex items-center justify-center">

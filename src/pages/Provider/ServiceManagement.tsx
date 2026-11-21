@@ -4,6 +4,7 @@ import {
   useCreateService,
   useDeleteService,
   useUpdateService,
+  useUploadProviderServiceImage,
 } from "@/data/PROVIDER/ProviderMutation";
 import ServiceFormModal, {
   type ServiceForm,
@@ -38,6 +39,7 @@ export default function ServiceManagement() {
   const createService = useCreateService();
   const updateServiceMutation = useUpdateService();
   const deleteServiceMutation = useDeleteService();
+  const uploadServiceImage = useUploadProviderServiceImage();
 
   const [form, setForm] = useState<ServiceForm>(emptyForm);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -125,11 +127,20 @@ export default function ServiceManagement() {
 
     setSaving(true);
     try {
+      const uploadedImagePaths = await Promise.all(
+        form.images.map((file) => uploadServiceImage.mutateAsync(file)),
+      );
       const input = {
         category,
         price,
         pricingType: pricingTypeForUnit(form.pricingUnit),
         description: form.description.trim(),
+        ProductImages: [
+          ...(editingService?.ProductImages ?? []).filter(
+            (path): path is string => Boolean(path),
+          ),
+          ...uploadedImagePaths,
+        ],
       };
 
       if (editingService) {

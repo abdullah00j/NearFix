@@ -5,6 +5,7 @@ import {
   deleteService,
   updateService,
   uploadProviderDocument,
+  uploadProviderServiceImage,
 } from "./ProviderServices";
 import { providerApplicationKeys, serviceListingKeys } from "./ProviderKeys";
 
@@ -23,6 +24,9 @@ export const useCreateProviderApplication = () => {
 
 export const useUploadProviderDocument = () =>
   useMutation({ mutationFn: uploadProviderDocument });
+
+export const useUploadProviderServiceImage = () =>
+  useMutation({ mutationFn: uploadProviderServiceImage });
 
 // PROVIDER SERVICES
 export const useCreateService = () => {

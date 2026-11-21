@@ -12,5 +12,9 @@ export const storage = defineStorage({
       allow.entity("identity").to(["read", "write", "delete"]),
       allow.groups(["ADMIN"]).to(["read"]),
     ],
+    "provider-services/{entity_id}/*": [
+      allow.entity("identity").to(["read", "write", "delete"]),
+      allow.authenticated.to(["read"]),
+    ],
   }),
 });

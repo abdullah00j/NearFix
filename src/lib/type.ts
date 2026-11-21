@@ -7,6 +7,7 @@ export type CreateProviderServiceInput = {
   description?: string;
   isActive?: boolean;
   pricingType?: "PER_TASK" | "PER_HOUR" | "PER_PRODUCT" | "PER_DAY" | null;
+  ProductImages?: string[] | null;
 };
 
 export type UpdateServiceInput = {
@@ -16,6 +17,7 @@ export type UpdateServiceInput = {
   description?: string | null;
   isActive?: boolean | null;
   pricingType?: "PER_TASK" | "PER_HOUR" | "PER_PRODUCT" | "PER_DAY" | null;
+  ProductImages?: string[] | null;
 };
 
 export type createProviderApplicationInput = Parameters<

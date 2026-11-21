@@ -196,3 +196,17 @@ export async function uploadProviderDocument({
   }).result;
   return path;
 }
+
+export async function uploadProviderServiceImage(file: File) {
+  const { identityId } = await fetchAuthSession();
+  if (!identityId) throw new Error("Sign in before uploading service images.");
+
+  const safeFileName = encodeURIComponent(file.name);
+  const path = `provider-services/${identityId}/${crypto.randomUUID()}-${safeFileName}`;
+  await uploadData({
+    path,
+    data: file,
+    options: { contentType: file.type },
+  }).result;
+  return path;
+}
